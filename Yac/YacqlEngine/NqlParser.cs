@@ -37,22 +37,27 @@ public partial class NqlParser : Parser {
 	protected static PredictionContextCache sharedContextCache = new PredictionContextCache();
 	public const int
 		T__0=1, T__1=2, T__2=3, T__3=4, T__4=5, T__5=6, T__6=7, T__7=8, T__8=9, 
-		T__9=10, T__10=11, T__11=12, T__12=13, NAME=14, NUMBER=15, WS=16;
+		T__9=10, T__10=11, T__11=12, T__12=13, T__13=14, T__14=15, T__15=16, T__16=17, 
+		T__17=18, T__18=19, NAME=20, NUMBER=21, WS=22;
 	public const int
 		RULE_query = 0, RULE_playerQuery = 1, RULE_teamQuery = 2, RULE_gameQuery = 3, 
-		RULE_whereClause = 4, RULE_condition = 5, RULE_operator = 6, RULE_value = 7;
+		RULE_compareQuery = 4, RULE_compareTarget = 5, RULE_playerList = 6, RULE_teamList = 7, 
+		RULE_gameList = 8, RULE_fieldSelection = 9, RULE_fieldExpr = 10, RULE_field = 11, 
+		RULE_whereClause = 12, RULE_condition = 13, RULE_operator = 14, RULE_value = 15;
 	public static readonly string[] ruleNames = {
-		"query", "playerQuery", "teamQuery", "gameQuery", "whereClause", "condition", 
-		"operator", "value"
+		"query", "playerQuery", "teamQuery", "gameQuery", "compareQuery", "compareTarget", 
+		"playerList", "teamList", "gameList", "fieldSelection", "fieldExpr", "field", 
+		"whereClause", "condition", "operator", "value"
 	};
 
 	private static readonly string[] _LiteralNames = {
 		null, "'player:'", "'stats'", "'team:'", "'schedule'", "'record'", "'games'", 
-		"'where'", "'and'", "'='", "'>'", "'<'", "'>='", "'<='"
+		"'compare'", "'players'", "':'", "'teams'", "','", "'/'", "'where'", "'and'", 
+		"'='", "'>'", "'<'", "'>='", "'<='"
 	};
 	private static readonly string[] _SymbolicNames = {
 		null, null, null, null, null, null, null, null, null, null, null, null, 
-		null, null, "NAME", "NUMBER", "WS"
+		null, null, null, null, null, null, null, null, "NAME", "NUMBER", "WS"
 	};
 	public static readonly IVocabulary DefaultVocabulary = new Vocabulary(_LiteralNames, _SymbolicNames);
 
@@ -96,6 +101,9 @@ public partial class NqlParser : Parser {
 		[System.Diagnostics.DebuggerNonUserCode] public GameQueryContext gameQuery() {
 			return GetRuleContext<GameQueryContext>(0);
 		}
+		[System.Diagnostics.DebuggerNonUserCode] public CompareQueryContext compareQuery() {
+			return GetRuleContext<CompareQueryContext>(0);
+		}
 		public QueryContext(ParserRuleContext parent, int invokingState)
 			: base(parent, invokingState)
 		{
@@ -124,28 +132,35 @@ public partial class NqlParser : Parser {
 		QueryContext _localctx = new QueryContext(Context, State);
 		EnterRule(_localctx, 0, RULE_query);
 		try {
-			State = 19;
+			State = 36;
 			ErrorHandler.Sync(this);
 			switch (TokenStream.LA(1)) {
 			case T__0:
 				EnterOuterAlt(_localctx, 1);
 				{
-				State = 16;
+				State = 32;
 				playerQuery();
 				}
 				break;
 			case T__2:
 				EnterOuterAlt(_localctx, 2);
 				{
-				State = 17;
+				State = 33;
 				teamQuery();
 				}
 				break;
 			case T__5:
 				EnterOuterAlt(_localctx, 3);
 				{
-				State = 18;
+				State = 34;
 				gameQuery();
+				}
+				break;
+			case T__6:
+				EnterOuterAlt(_localctx, 4);
+				{
+				State = 35;
+				compareQuery();
 				}
 				break;
 			default:
@@ -199,18 +214,18 @@ public partial class NqlParser : Parser {
 		try {
 			EnterOuterAlt(_localctx, 1);
 			{
-			State = 21;
+			State = 38;
 			Match(T__0);
-			State = 22;
+			State = 39;
 			Match(NAME);
-			State = 23;
+			State = 40;
 			Match(T__1);
-			State = 25;
+			State = 42;
 			ErrorHandler.Sync(this);
 			_la = TokenStream.LA(1);
-			if (_la==T__6) {
+			if (_la==T__12) {
 				{
-				State = 24;
+				State = 41;
 				whereClause();
 				}
 			}
@@ -264,11 +279,11 @@ public partial class NqlParser : Parser {
 		try {
 			EnterOuterAlt(_localctx, 1);
 			{
-			State = 27;
+			State = 44;
 			Match(T__2);
-			State = 28;
+			State = 45;
 			Match(NAME);
-			State = 29;
+			State = 46;
 			_la = TokenStream.LA(1);
 			if ( !(_la==T__3 || _la==T__4) ) {
 			ErrorHandler.RecoverInline(this);
@@ -277,12 +292,12 @@ public partial class NqlParser : Parser {
 				ErrorHandler.ReportMatch(this);
 			    Consume();
 			}
-			State = 31;
+			State = 48;
 			ErrorHandler.Sync(this);
 			_la = TokenStream.LA(1);
-			if (_la==T__6) {
+			if (_la==T__12) {
 				{
-				State = 30;
+				State = 47;
 				whereClause();
 				}
 			}
@@ -334,10 +349,566 @@ public partial class NqlParser : Parser {
 		try {
 			EnterOuterAlt(_localctx, 1);
 			{
-			State = 33;
+			State = 50;
 			Match(T__5);
-			State = 34;
+			State = 51;
 			whereClause();
+			}
+		}
+		catch (RecognitionException re) {
+			_localctx.exception = re;
+			ErrorHandler.ReportError(this, re);
+			ErrorHandler.Recover(this, re);
+		}
+		finally {
+			ExitRule();
+		}
+		return _localctx;
+	}
+
+	public partial class CompareQueryContext : ParserRuleContext {
+		[System.Diagnostics.DebuggerNonUserCode] public CompareTargetContext compareTarget() {
+			return GetRuleContext<CompareTargetContext>(0);
+		}
+		[System.Diagnostics.DebuggerNonUserCode] public FieldSelectionContext fieldSelection() {
+			return GetRuleContext<FieldSelectionContext>(0);
+		}
+		[System.Diagnostics.DebuggerNonUserCode] public WhereClauseContext whereClause() {
+			return GetRuleContext<WhereClauseContext>(0);
+		}
+		public CompareQueryContext(ParserRuleContext parent, int invokingState)
+			: base(parent, invokingState)
+		{
+		}
+		public override int RuleIndex { get { return RULE_compareQuery; } }
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override void EnterRule(IParseTreeListener listener) {
+			INqlListener typedListener = listener as INqlListener;
+			if (typedListener != null) typedListener.EnterCompareQuery(this);
+		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override void ExitRule(IParseTreeListener listener) {
+			INqlListener typedListener = listener as INqlListener;
+			if (typedListener != null) typedListener.ExitCompareQuery(this);
+		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			INqlVisitor<TResult> typedVisitor = visitor as INqlVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitCompareQuery(this);
+			else return visitor.VisitChildren(this);
+		}
+	}
+
+	[RuleVersion(0)]
+	public CompareQueryContext compareQuery() {
+		CompareQueryContext _localctx = new CompareQueryContext(Context, State);
+		EnterRule(_localctx, 8, RULE_compareQuery);
+		int _la;
+		try {
+			EnterOuterAlt(_localctx, 1);
+			{
+			State = 53;
+			Match(T__6);
+			State = 54;
+			compareTarget();
+			State = 56;
+			ErrorHandler.Sync(this);
+			_la = TokenStream.LA(1);
+			if (_la==NAME) {
+				{
+				State = 55;
+				fieldSelection();
+				}
+			}
+
+			State = 59;
+			ErrorHandler.Sync(this);
+			_la = TokenStream.LA(1);
+			if (_la==T__12) {
+				{
+				State = 58;
+				whereClause();
+				}
+			}
+
+			}
+		}
+		catch (RecognitionException re) {
+			_localctx.exception = re;
+			ErrorHandler.ReportError(this, re);
+			ErrorHandler.Recover(this, re);
+		}
+		finally {
+			ExitRule();
+		}
+		return _localctx;
+	}
+
+	public partial class CompareTargetContext : ParserRuleContext {
+		[System.Diagnostics.DebuggerNonUserCode] public PlayerListContext playerList() {
+			return GetRuleContext<PlayerListContext>(0);
+		}
+		[System.Diagnostics.DebuggerNonUserCode] public TeamListContext teamList() {
+			return GetRuleContext<TeamListContext>(0);
+		}
+		[System.Diagnostics.DebuggerNonUserCode] public GameListContext gameList() {
+			return GetRuleContext<GameListContext>(0);
+		}
+		public CompareTargetContext(ParserRuleContext parent, int invokingState)
+			: base(parent, invokingState)
+		{
+		}
+		public override int RuleIndex { get { return RULE_compareTarget; } }
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override void EnterRule(IParseTreeListener listener) {
+			INqlListener typedListener = listener as INqlListener;
+			if (typedListener != null) typedListener.EnterCompareTarget(this);
+		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override void ExitRule(IParseTreeListener listener) {
+			INqlListener typedListener = listener as INqlListener;
+			if (typedListener != null) typedListener.ExitCompareTarget(this);
+		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			INqlVisitor<TResult> typedVisitor = visitor as INqlVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitCompareTarget(this);
+			else return visitor.VisitChildren(this);
+		}
+	}
+
+	[RuleVersion(0)]
+	public CompareTargetContext compareTarget() {
+		CompareTargetContext _localctx = new CompareTargetContext(Context, State);
+		EnterRule(_localctx, 10, RULE_compareTarget);
+		try {
+			State = 71;
+			ErrorHandler.Sync(this);
+			switch (TokenStream.LA(1)) {
+			case T__7:
+				EnterOuterAlt(_localctx, 1);
+				{
+				State = 61;
+				Match(T__7);
+				State = 62;
+				Match(T__8);
+				State = 63;
+				playerList();
+				}
+				break;
+			case T__9:
+				EnterOuterAlt(_localctx, 2);
+				{
+				State = 64;
+				Match(T__9);
+				State = 65;
+				Match(T__8);
+				State = 66;
+				teamList();
+				}
+				break;
+			case T__5:
+				EnterOuterAlt(_localctx, 3);
+				{
+				State = 67;
+				Match(T__5);
+				State = 68;
+				Match(T__8);
+				State = 69;
+				gameList();
+				}
+				break;
+			case NAME:
+				EnterOuterAlt(_localctx, 4);
+				{
+				State = 70;
+				teamList();
+				}
+				break;
+			default:
+				throw new NoViableAltException(this);
+			}
+		}
+		catch (RecognitionException re) {
+			_localctx.exception = re;
+			ErrorHandler.ReportError(this, re);
+			ErrorHandler.Recover(this, re);
+		}
+		finally {
+			ExitRule();
+		}
+		return _localctx;
+	}
+
+	public partial class PlayerListContext : ParserRuleContext {
+		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode[] NAME() { return GetTokens(NqlParser.NAME); }
+		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode NAME(int i) {
+			return GetToken(NqlParser.NAME, i);
+		}
+		public PlayerListContext(ParserRuleContext parent, int invokingState)
+			: base(parent, invokingState)
+		{
+		}
+		public override int RuleIndex { get { return RULE_playerList; } }
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override void EnterRule(IParseTreeListener listener) {
+			INqlListener typedListener = listener as INqlListener;
+			if (typedListener != null) typedListener.EnterPlayerList(this);
+		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override void ExitRule(IParseTreeListener listener) {
+			INqlListener typedListener = listener as INqlListener;
+			if (typedListener != null) typedListener.ExitPlayerList(this);
+		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			INqlVisitor<TResult> typedVisitor = visitor as INqlVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitPlayerList(this);
+			else return visitor.VisitChildren(this);
+		}
+	}
+
+	[RuleVersion(0)]
+	public PlayerListContext playerList() {
+		PlayerListContext _localctx = new PlayerListContext(Context, State);
+		EnterRule(_localctx, 12, RULE_playerList);
+		int _la;
+		try {
+			EnterOuterAlt(_localctx, 1);
+			{
+			State = 73;
+			Match(NAME);
+			State = 78;
+			ErrorHandler.Sync(this);
+			_la = TokenStream.LA(1);
+			while (_la==T__10) {
+				{
+				{
+				State = 74;
+				Match(T__10);
+				State = 75;
+				Match(NAME);
+				}
+				}
+				State = 80;
+				ErrorHandler.Sync(this);
+				_la = TokenStream.LA(1);
+			}
+			}
+		}
+		catch (RecognitionException re) {
+			_localctx.exception = re;
+			ErrorHandler.ReportError(this, re);
+			ErrorHandler.Recover(this, re);
+		}
+		finally {
+			ExitRule();
+		}
+		return _localctx;
+	}
+
+	public partial class TeamListContext : ParserRuleContext {
+		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode[] NAME() { return GetTokens(NqlParser.NAME); }
+		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode NAME(int i) {
+			return GetToken(NqlParser.NAME, i);
+		}
+		public TeamListContext(ParserRuleContext parent, int invokingState)
+			: base(parent, invokingState)
+		{
+		}
+		public override int RuleIndex { get { return RULE_teamList; } }
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override void EnterRule(IParseTreeListener listener) {
+			INqlListener typedListener = listener as INqlListener;
+			if (typedListener != null) typedListener.EnterTeamList(this);
+		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override void ExitRule(IParseTreeListener listener) {
+			INqlListener typedListener = listener as INqlListener;
+			if (typedListener != null) typedListener.ExitTeamList(this);
+		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			INqlVisitor<TResult> typedVisitor = visitor as INqlVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitTeamList(this);
+			else return visitor.VisitChildren(this);
+		}
+	}
+
+	[RuleVersion(0)]
+	public TeamListContext teamList() {
+		TeamListContext _localctx = new TeamListContext(Context, State);
+		EnterRule(_localctx, 14, RULE_teamList);
+		int _la;
+		try {
+			EnterOuterAlt(_localctx, 1);
+			{
+			State = 81;
+			Match(NAME);
+			State = 86;
+			ErrorHandler.Sync(this);
+			_la = TokenStream.LA(1);
+			while (_la==T__10) {
+				{
+				{
+				State = 82;
+				Match(T__10);
+				State = 83;
+				Match(NAME);
+				}
+				}
+				State = 88;
+				ErrorHandler.Sync(this);
+				_la = TokenStream.LA(1);
+			}
+			}
+		}
+		catch (RecognitionException re) {
+			_localctx.exception = re;
+			ErrorHandler.ReportError(this, re);
+			ErrorHandler.Recover(this, re);
+		}
+		finally {
+			ExitRule();
+		}
+		return _localctx;
+	}
+
+	public partial class GameListContext : ParserRuleContext {
+		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode[] NAME() { return GetTokens(NqlParser.NAME); }
+		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode NAME(int i) {
+			return GetToken(NqlParser.NAME, i);
+		}
+		public GameListContext(ParserRuleContext parent, int invokingState)
+			: base(parent, invokingState)
+		{
+		}
+		public override int RuleIndex { get { return RULE_gameList; } }
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override void EnterRule(IParseTreeListener listener) {
+			INqlListener typedListener = listener as INqlListener;
+			if (typedListener != null) typedListener.EnterGameList(this);
+		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override void ExitRule(IParseTreeListener listener) {
+			INqlListener typedListener = listener as INqlListener;
+			if (typedListener != null) typedListener.ExitGameList(this);
+		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			INqlVisitor<TResult> typedVisitor = visitor as INqlVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitGameList(this);
+			else return visitor.VisitChildren(this);
+		}
+	}
+
+	[RuleVersion(0)]
+	public GameListContext gameList() {
+		GameListContext _localctx = new GameListContext(Context, State);
+		EnterRule(_localctx, 16, RULE_gameList);
+		int _la;
+		try {
+			EnterOuterAlt(_localctx, 1);
+			{
+			State = 89;
+			Match(NAME);
+			State = 94;
+			ErrorHandler.Sync(this);
+			_la = TokenStream.LA(1);
+			while (_la==T__10) {
+				{
+				{
+				State = 90;
+				Match(T__10);
+				State = 91;
+				Match(NAME);
+				}
+				}
+				State = 96;
+				ErrorHandler.Sync(this);
+				_la = TokenStream.LA(1);
+			}
+			}
+		}
+		catch (RecognitionException re) {
+			_localctx.exception = re;
+			ErrorHandler.ReportError(this, re);
+			ErrorHandler.Recover(this, re);
+		}
+		finally {
+			ExitRule();
+		}
+		return _localctx;
+	}
+
+	public partial class FieldSelectionContext : ParserRuleContext {
+		[System.Diagnostics.DebuggerNonUserCode] public FieldExprContext[] fieldExpr() {
+			return GetRuleContexts<FieldExprContext>();
+		}
+		[System.Diagnostics.DebuggerNonUserCode] public FieldExprContext fieldExpr(int i) {
+			return GetRuleContext<FieldExprContext>(i);
+		}
+		public FieldSelectionContext(ParserRuleContext parent, int invokingState)
+			: base(parent, invokingState)
+		{
+		}
+		public override int RuleIndex { get { return RULE_fieldSelection; } }
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override void EnterRule(IParseTreeListener listener) {
+			INqlListener typedListener = listener as INqlListener;
+			if (typedListener != null) typedListener.EnterFieldSelection(this);
+		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override void ExitRule(IParseTreeListener listener) {
+			INqlListener typedListener = listener as INqlListener;
+			if (typedListener != null) typedListener.ExitFieldSelection(this);
+		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			INqlVisitor<TResult> typedVisitor = visitor as INqlVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitFieldSelection(this);
+			else return visitor.VisitChildren(this);
+		}
+	}
+
+	[RuleVersion(0)]
+	public FieldSelectionContext fieldSelection() {
+		FieldSelectionContext _localctx = new FieldSelectionContext(Context, State);
+		EnterRule(_localctx, 18, RULE_fieldSelection);
+		int _la;
+		try {
+			EnterOuterAlt(_localctx, 1);
+			{
+			State = 97;
+			fieldExpr();
+			State = 102;
+			ErrorHandler.Sync(this);
+			_la = TokenStream.LA(1);
+			while (_la==T__10) {
+				{
+				{
+				State = 98;
+				Match(T__10);
+				State = 99;
+				fieldExpr();
+				}
+				}
+				State = 104;
+				ErrorHandler.Sync(this);
+				_la = TokenStream.LA(1);
+			}
+			}
+		}
+		catch (RecognitionException re) {
+			_localctx.exception = re;
+			ErrorHandler.ReportError(this, re);
+			ErrorHandler.Recover(this, re);
+		}
+		finally {
+			ExitRule();
+		}
+		return _localctx;
+	}
+
+	public partial class FieldExprContext : ParserRuleContext {
+		[System.Diagnostics.DebuggerNonUserCode] public FieldContext[] field() {
+			return GetRuleContexts<FieldContext>();
+		}
+		[System.Diagnostics.DebuggerNonUserCode] public FieldContext field(int i) {
+			return GetRuleContext<FieldContext>(i);
+		}
+		public FieldExprContext(ParserRuleContext parent, int invokingState)
+			: base(parent, invokingState)
+		{
+		}
+		public override int RuleIndex { get { return RULE_fieldExpr; } }
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override void EnterRule(IParseTreeListener listener) {
+			INqlListener typedListener = listener as INqlListener;
+			if (typedListener != null) typedListener.EnterFieldExpr(this);
+		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override void ExitRule(IParseTreeListener listener) {
+			INqlListener typedListener = listener as INqlListener;
+			if (typedListener != null) typedListener.ExitFieldExpr(this);
+		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			INqlVisitor<TResult> typedVisitor = visitor as INqlVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitFieldExpr(this);
+			else return visitor.VisitChildren(this);
+		}
+	}
+
+	[RuleVersion(0)]
+	public FieldExprContext fieldExpr() {
+		FieldExprContext _localctx = new FieldExprContext(Context, State);
+		EnterRule(_localctx, 20, RULE_fieldExpr);
+		int _la;
+		try {
+			EnterOuterAlt(_localctx, 1);
+			{
+			State = 105;
+			field();
+			State = 108;
+			ErrorHandler.Sync(this);
+			_la = TokenStream.LA(1);
+			if (_la==T__11) {
+				{
+				State = 106;
+				Match(T__11);
+				State = 107;
+				field();
+				}
+			}
+
+			}
+		}
+		catch (RecognitionException re) {
+			_localctx.exception = re;
+			ErrorHandler.ReportError(this, re);
+			ErrorHandler.Recover(this, re);
+		}
+		finally {
+			ExitRule();
+		}
+		return _localctx;
+	}
+
+	public partial class FieldContext : ParserRuleContext {
+		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode NAME() { return GetToken(NqlParser.NAME, 0); }
+		public FieldContext(ParserRuleContext parent, int invokingState)
+			: base(parent, invokingState)
+		{
+		}
+		public override int RuleIndex { get { return RULE_field; } }
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override void EnterRule(IParseTreeListener listener) {
+			INqlListener typedListener = listener as INqlListener;
+			if (typedListener != null) typedListener.EnterField(this);
+		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override void ExitRule(IParseTreeListener listener) {
+			INqlListener typedListener = listener as INqlListener;
+			if (typedListener != null) typedListener.ExitField(this);
+		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			INqlVisitor<TResult> typedVisitor = visitor as INqlVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitField(this);
+			else return visitor.VisitChildren(this);
+		}
+	}
+
+	[RuleVersion(0)]
+	public FieldContext field() {
+		FieldContext _localctx = new FieldContext(Context, State);
+		EnterRule(_localctx, 22, RULE_field);
+		try {
+			EnterOuterAlt(_localctx, 1);
+			{
+			State = 110;
+			Match(NAME);
 			}
 		}
 		catch (RecognitionException re) {
@@ -384,28 +955,28 @@ public partial class NqlParser : Parser {
 	[RuleVersion(0)]
 	public WhereClauseContext whereClause() {
 		WhereClauseContext _localctx = new WhereClauseContext(Context, State);
-		EnterRule(_localctx, 8, RULE_whereClause);
+		EnterRule(_localctx, 24, RULE_whereClause);
 		int _la;
 		try {
 			EnterOuterAlt(_localctx, 1);
 			{
-			State = 36;
-			Match(T__6);
-			State = 37;
+			State = 112;
+			Match(T__12);
+			State = 113;
 			condition();
-			State = 42;
+			State = 118;
 			ErrorHandler.Sync(this);
 			_la = TokenStream.LA(1);
-			while (_la==T__7) {
+			while (_la==T__13) {
 				{
 				{
-				State = 38;
-				Match(T__7);
-				State = 39;
+				State = 114;
+				Match(T__13);
+				State = 115;
 				condition();
 				}
 				}
-				State = 44;
+				State = 120;
 				ErrorHandler.Sync(this);
 				_la = TokenStream.LA(1);
 			}
@@ -456,15 +1027,15 @@ public partial class NqlParser : Parser {
 	[RuleVersion(0)]
 	public ConditionContext condition() {
 		ConditionContext _localctx = new ConditionContext(Context, State);
-		EnterRule(_localctx, 10, RULE_condition);
+		EnterRule(_localctx, 26, RULE_condition);
 		try {
 			EnterOuterAlt(_localctx, 1);
 			{
-			State = 45;
+			State = 121;
 			Match(NAME);
-			State = 46;
+			State = 122;
 			@operator();
-			State = 47;
+			State = 123;
 			value();
 			}
 		}
@@ -506,14 +1077,14 @@ public partial class NqlParser : Parser {
 	[RuleVersion(0)]
 	public OperatorContext @operator() {
 		OperatorContext _localctx = new OperatorContext(Context, State);
-		EnterRule(_localctx, 12, RULE_operator);
+		EnterRule(_localctx, 28, RULE_operator);
 		int _la;
 		try {
 			EnterOuterAlt(_localctx, 1);
 			{
-			State = 49;
+			State = 125;
 			_la = TokenStream.LA(1);
-			if ( !((((_la) & ~0x3f) == 0 && ((1L << _la) & 15872L) != 0)) ) {
+			if ( !((((_la) & ~0x3f) == 0 && ((1L << _la) & 1015808L) != 0)) ) {
 			ErrorHandler.RecoverInline(this);
 			}
 			else {
@@ -562,12 +1133,12 @@ public partial class NqlParser : Parser {
 	[RuleVersion(0)]
 	public ValueContext value() {
 		ValueContext _localctx = new ValueContext(Context, State);
-		EnterRule(_localctx, 14, RULE_value);
+		EnterRule(_localctx, 30, RULE_value);
 		int _la;
 		try {
 			EnterOuterAlt(_localctx, 1);
 			{
-			State = 51;
+			State = 127;
 			_la = TokenStream.LA(1);
 			if ( !(_la==NAME || _la==NUMBER) ) {
 			ErrorHandler.RecoverInline(this);
@@ -590,21 +1161,44 @@ public partial class NqlParser : Parser {
 	}
 
 	private static int[] _serializedATN = {
-		4,1,16,54,2,0,7,0,2,1,7,1,2,2,7,2,2,3,7,3,2,4,7,4,2,5,7,5,2,6,7,6,2,7,
-		7,7,1,0,1,0,1,0,3,0,20,8,0,1,1,1,1,1,1,1,1,3,1,26,8,1,1,2,1,2,1,2,1,2,
-		3,2,32,8,2,1,3,1,3,1,3,1,4,1,4,1,4,1,4,5,4,41,8,4,10,4,12,4,44,9,4,1,5,
-		1,5,1,5,1,5,1,6,1,6,1,7,1,7,1,7,0,0,8,0,2,4,6,8,10,12,14,0,3,1,0,4,5,1,
-		0,9,13,1,0,14,15,50,0,19,1,0,0,0,2,21,1,0,0,0,4,27,1,0,0,0,6,33,1,0,0,
-		0,8,36,1,0,0,0,10,45,1,0,0,0,12,49,1,0,0,0,14,51,1,0,0,0,16,20,3,2,1,0,
-		17,20,3,4,2,0,18,20,3,6,3,0,19,16,1,0,0,0,19,17,1,0,0,0,19,18,1,0,0,0,
-		20,1,1,0,0,0,21,22,5,1,0,0,22,23,5,14,0,0,23,25,5,2,0,0,24,26,3,8,4,0,
-		25,24,1,0,0,0,25,26,1,0,0,0,26,3,1,0,0,0,27,28,5,3,0,0,28,29,5,14,0,0,
-		29,31,7,0,0,0,30,32,3,8,4,0,31,30,1,0,0,0,31,32,1,0,0,0,32,5,1,0,0,0,33,
-		34,5,6,0,0,34,35,3,8,4,0,35,7,1,0,0,0,36,37,5,7,0,0,37,42,3,10,5,0,38,
-		39,5,8,0,0,39,41,3,10,5,0,40,38,1,0,0,0,41,44,1,0,0,0,42,40,1,0,0,0,42,
-		43,1,0,0,0,43,9,1,0,0,0,44,42,1,0,0,0,45,46,5,14,0,0,46,47,3,12,6,0,47,
-		48,3,14,7,0,48,11,1,0,0,0,49,50,7,1,0,0,50,13,1,0,0,0,51,52,7,2,0,0,52,
-		15,1,0,0,0,4,19,25,31,42
+		4,1,22,130,2,0,7,0,2,1,7,1,2,2,7,2,2,3,7,3,2,4,7,4,2,5,7,5,2,6,7,6,2,7,
+		7,7,2,8,7,8,2,9,7,9,2,10,7,10,2,11,7,11,2,12,7,12,2,13,7,13,2,14,7,14,
+		2,15,7,15,1,0,1,0,1,0,1,0,3,0,37,8,0,1,1,1,1,1,1,1,1,3,1,43,8,1,1,2,1,
+		2,1,2,1,2,3,2,49,8,2,1,3,1,3,1,3,1,4,1,4,1,4,3,4,57,8,4,1,4,3,4,60,8,4,
+		1,5,1,5,1,5,1,5,1,5,1,5,1,5,1,5,1,5,1,5,3,5,72,8,5,1,6,1,6,1,6,5,6,77,
+		8,6,10,6,12,6,80,9,6,1,7,1,7,1,7,5,7,85,8,7,10,7,12,7,88,9,7,1,8,1,8,1,
+		8,5,8,93,8,8,10,8,12,8,96,9,8,1,9,1,9,1,9,5,9,101,8,9,10,9,12,9,104,9,
+		9,1,10,1,10,1,10,3,10,109,8,10,1,11,1,11,1,12,1,12,1,12,1,12,5,12,117,
+		8,12,10,12,12,12,120,9,12,1,13,1,13,1,13,1,13,1,14,1,14,1,15,1,15,1,15,
+		0,0,16,0,2,4,6,8,10,12,14,16,18,20,22,24,26,28,30,0,3,1,0,4,5,1,0,15,19,
+		1,0,20,21,129,0,36,1,0,0,0,2,38,1,0,0,0,4,44,1,0,0,0,6,50,1,0,0,0,8,53,
+		1,0,0,0,10,71,1,0,0,0,12,73,1,0,0,0,14,81,1,0,0,0,16,89,1,0,0,0,18,97,
+		1,0,0,0,20,105,1,0,0,0,22,110,1,0,0,0,24,112,1,0,0,0,26,121,1,0,0,0,28,
+		125,1,0,0,0,30,127,1,0,0,0,32,37,3,2,1,0,33,37,3,4,2,0,34,37,3,6,3,0,35,
+		37,3,8,4,0,36,32,1,0,0,0,36,33,1,0,0,0,36,34,1,0,0,0,36,35,1,0,0,0,37,
+		1,1,0,0,0,38,39,5,1,0,0,39,40,5,20,0,0,40,42,5,2,0,0,41,43,3,24,12,0,42,
+		41,1,0,0,0,42,43,1,0,0,0,43,3,1,0,0,0,44,45,5,3,0,0,45,46,5,20,0,0,46,
+		48,7,0,0,0,47,49,3,24,12,0,48,47,1,0,0,0,48,49,1,0,0,0,49,5,1,0,0,0,50,
+		51,5,6,0,0,51,52,3,24,12,0,52,7,1,0,0,0,53,54,5,7,0,0,54,56,3,10,5,0,55,
+		57,3,18,9,0,56,55,1,0,0,0,56,57,1,0,0,0,57,59,1,0,0,0,58,60,3,24,12,0,
+		59,58,1,0,0,0,59,60,1,0,0,0,60,9,1,0,0,0,61,62,5,8,0,0,62,63,5,9,0,0,63,
+		72,3,12,6,0,64,65,5,10,0,0,65,66,5,9,0,0,66,72,3,14,7,0,67,68,5,6,0,0,
+		68,69,5,9,0,0,69,72,3,16,8,0,70,72,3,14,7,0,71,61,1,0,0,0,71,64,1,0,0,
+		0,71,67,1,0,0,0,71,70,1,0,0,0,72,11,1,0,0,0,73,78,5,20,0,0,74,75,5,11,
+		0,0,75,77,5,20,0,0,76,74,1,0,0,0,77,80,1,0,0,0,78,76,1,0,0,0,78,79,1,0,
+		0,0,79,13,1,0,0,0,80,78,1,0,0,0,81,86,5,20,0,0,82,83,5,11,0,0,83,85,5,
+		20,0,0,84,82,1,0,0,0,85,88,1,0,0,0,86,84,1,0,0,0,86,87,1,0,0,0,87,15,1,
+		0,0,0,88,86,1,0,0,0,89,94,5,20,0,0,90,91,5,11,0,0,91,93,5,20,0,0,92,90,
+		1,0,0,0,93,96,1,0,0,0,94,92,1,0,0,0,94,95,1,0,0,0,95,17,1,0,0,0,96,94,
+		1,0,0,0,97,102,3,20,10,0,98,99,5,11,0,0,99,101,3,20,10,0,100,98,1,0,0,
+		0,101,104,1,0,0,0,102,100,1,0,0,0,102,103,1,0,0,0,103,19,1,0,0,0,104,102,
+		1,0,0,0,105,108,3,22,11,0,106,107,5,12,0,0,107,109,3,22,11,0,108,106,1,
+		0,0,0,108,109,1,0,0,0,109,21,1,0,0,0,110,111,5,20,0,0,111,23,1,0,0,0,112,
+		113,5,13,0,0,113,118,3,26,13,0,114,115,5,14,0,0,115,117,3,26,13,0,116,
+		114,1,0,0,0,117,120,1,0,0,0,118,116,1,0,0,0,118,119,1,0,0,0,119,25,1,0,
+		0,0,120,118,1,0,0,0,121,122,5,20,0,0,122,123,3,28,14,0,123,124,3,30,15,
+		0,124,27,1,0,0,0,125,126,7,1,0,0,126,29,1,0,0,0,127,128,7,2,0,0,128,31,
+		1,0,0,0,12,36,42,48,56,59,71,78,86,94,102,108,118
 	};
 
 	public static readonly ATN _ATN =

@@ -56,6 +56,54 @@ public interface INqlVisitor<Result> : IParseTreeVisitor<Result> {
 	/// <return>The visitor result.</return>
 	Result VisitGameQuery([NotNull] NqlParser.GameQueryContext context);
 	/// <summary>
+	/// Visit a parse tree produced by <see cref="NqlParser.compareQuery"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitCompareQuery([NotNull] NqlParser.CompareQueryContext context);
+	/// <summary>
+	/// Visit a parse tree produced by <see cref="NqlParser.compareTarget"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitCompareTarget([NotNull] NqlParser.CompareTargetContext context);
+	/// <summary>
+	/// Visit a parse tree produced by <see cref="NqlParser.playerList"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitPlayerList([NotNull] NqlParser.PlayerListContext context);
+	/// <summary>
+	/// Visit a parse tree produced by <see cref="NqlParser.teamList"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitTeamList([NotNull] NqlParser.TeamListContext context);
+	/// <summary>
+	/// Visit a parse tree produced by <see cref="NqlParser.gameList"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitGameList([NotNull] NqlParser.GameListContext context);
+	/// <summary>
+	/// Visit a parse tree produced by <see cref="NqlParser.fieldSelection"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitFieldSelection([NotNull] NqlParser.FieldSelectionContext context);
+	/// <summary>
+	/// Visit a parse tree produced by <see cref="NqlParser.fieldExpr"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitFieldExpr([NotNull] NqlParser.FieldExprContext context);
+	/// <summary>
+	/// Visit a parse tree produced by <see cref="NqlParser.field"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitField([NotNull] NqlParser.FieldContext context);
+	/// <summary>
 	/// Visit a parse tree produced by <see cref="NqlParser.whereClause"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>

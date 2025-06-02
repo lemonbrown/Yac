@@ -28,8 +28,8 @@ var records = new List<TeamRecord>
 
 var games = new List<Game>
 {
-    new("Chiefs", "Broncos", 7, 2023, "loss"),
-    new("Chiefs", "Raiders", 10, 2023, "win"),
+    new(Guid.NewGuid().ToString(), "Chiefs", "Broncos", 7, 2023, "loss"),
+    new(Guid.NewGuid().ToString(), "Chiefs", "Raiders", 10, 2023, "win"),
 };
 
 
@@ -40,10 +40,23 @@ while (true)
     if (string.IsNullOrWhiteSpace(input) || input.ToLower() == "exit")
         break;
 
-    NqlEngine.Run(input, players, schedules, records, games);
+    var result = NqlEngine.Run(input, players, schedules, records, games);
 }
 
 public record PlayerStats(string Name, int Season, int PassingYards, int Touchdowns, int Interceptions);
 public record TeamSchedule(string Team, int Week, string Opponent, string Result); // Result = "win"/"loss"
 public record TeamRecord(string Team, int Season, int Wins, int Losses);
-public record Game(string Team, string Opponent, int Week, int Season, string Result);
+public record Game(string GameId, string Team, string Opponent, int Week, int Season, string Result);
+
+
+public class QueryCondition {
+    public string Field { get; set; } = "";
+    public string Operator { get; set; } = "";
+    public string Value { get; set; } = "";
+}
+
+
+public class PlayerComparisonResult {
+    public string PlayerName { get; set; }
+    public Dictionary<string, double?> Stats { get; set; } = new();
+}

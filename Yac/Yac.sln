@@ -5,6 +5,8 @@ VisualStudioVersion = 17.10.35122.118
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "YacqlEngine", "YacqlEngine\YacqlEngine.csproj", "{A63615A5-8565-4988-B115-73A29F996BB0}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "YacdbApi", "YacdbApi\YacdbApi.csproj", "{39D2D310-9831-46B7-992E-9DE4C0759B3F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{A63615A5-8565-4988-B115-73A29F996BB0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A63615A5-8565-4988-B115-73A29F996BB0}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A63615A5-8565-4988-B115-73A29F996BB0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{39D2D310-9831-46B7-992E-9DE4C0759B3F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{39D2D310-9831-46B7-992E-9DE4C0759B3F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{39D2D310-9831-46B7-992E-9DE4C0759B3F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{39D2D310-9831-46B7-992E-9DE4C0759B3F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
