@@ -51,6 +51,26 @@ public interface INqlListener : IParseTreeListener {
 	/// <param name="context">The parse tree.</param>
 	void ExitPlayerQuery([NotNull] NqlParser.PlayerQueryContext context);
 	/// <summary>
+	/// Enter a parse tree produced by <see cref="NqlParser.teamQuery"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void EnterTeamQuery([NotNull] NqlParser.TeamQueryContext context);
+	/// <summary>
+	/// Exit a parse tree produced by <see cref="NqlParser.teamQuery"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void ExitTeamQuery([NotNull] NqlParser.TeamQueryContext context);
+	/// <summary>
+	/// Enter a parse tree produced by <see cref="NqlParser.gameQuery"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void EnterGameQuery([NotNull] NqlParser.GameQueryContext context);
+	/// <summary>
+	/// Exit a parse tree produced by <see cref="NqlParser.gameQuery"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void ExitGameQuery([NotNull] NqlParser.GameQueryContext context);
+	/// <summary>
 	/// Enter a parse tree produced by <see cref="NqlParser.whereClause"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>

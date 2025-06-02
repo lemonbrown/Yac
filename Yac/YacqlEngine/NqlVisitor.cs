@@ -44,6 +44,18 @@ public interface INqlVisitor<Result> : IParseTreeVisitor<Result> {
 	/// <return>The visitor result.</return>
 	Result VisitPlayerQuery([NotNull] NqlParser.PlayerQueryContext context);
 	/// <summary>
+	/// Visit a parse tree produced by <see cref="NqlParser.teamQuery"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitTeamQuery([NotNull] NqlParser.TeamQueryContext context);
+	/// <summary>
+	/// Visit a parse tree produced by <see cref="NqlParser.gameQuery"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitGameQuery([NotNull] NqlParser.GameQueryContext context);
+	/// <summary>
 	/// Visit a parse tree produced by <see cref="NqlParser.whereClause"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>

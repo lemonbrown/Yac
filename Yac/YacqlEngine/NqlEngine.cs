@@ -9,7 +9,10 @@ namespace YacqlEngine
 {
     public class NqlEngine
     {
-        public static void Run(string input, List<PlayerStats> playerStats)
+        public static void Run(string input, List<PlayerStats> players,
+        List<TeamSchedule> schedules,
+        List<TeamRecord> records,
+        List<Game> games)
         {
             var inputStream = CharStreams.fromString(input);
             var lexer = new NqlLexer(inputStream);
@@ -17,7 +20,7 @@ namespace YacqlEngine
             var parser = new NqlParser(tokens);
             var tree = parser.query();
 
-            var visitor = new NqlQueryVisitor(playerStats);
+            var visitor = new NqlQueryVisitor(players, schedules, records, games);
             visitor.Visit(tree);
         }
     }
