@@ -6,5 +6,5 @@ using System.Threading.Tasks;
 
 namespace YacData.Models
 {
-    public record Player(int Id, string FirstName, string LastName);
+    public record Player(int Id, string FirstName, string MiddleName, string LastName, DateTime BirthDate);
 }

@@ -1,16 +1,166 @@
-﻿using HtmlAgilityPack;
-using System;
-using System.Linq;
-using System.Net.Http;
-using System.Threading.Tasks;
+﻿using DataScraper.Helpers;
+using HtmlAgilityPack;
+using Microsoft.Playwright;
+using System.Net;
+using System.Text.RegularExpressions;
 using YacData;
 using YacData.Models;
+using static System.Net.Mime.MediaTypeNames;
 
-namespace DataScraper
-{
+namespace DataScraper {
 
-    class PfrScraper(YacDataService yacDataService)
+
+
+    class PfrScraper(YacDataService yacDataService, HttpHelper httpHelper)
     {
+
+        public async Task GetPlayersAlphabetically(string letter, int year = 2000) {
+
+            var url = $"https://www.pro-football-reference.com/players/{letter}";
+
+            var html = await httpHelper.GetHtmlAsync(url);
+
+            var htmlDoc = new HtmlDocument();
+
+            htmlDoc.LoadHtml(html);
+
+            var players = new List<Player>();
+
+            var paragraphs = htmlDoc.DocumentNode.SelectNodes("//div[@id='div_players']/p");
+
+            foreach (var p in paragraphs) {
+                var aNode = p.Descendants("a").FirstOrDefault();
+                if (aNode == null)
+                    continue;
+
+                string href = aNode.GetAttributeValue("href", "");
+                
+
+                // Get all text content and extract years from the tail
+                string fullText = WebUtility.HtmlDecode(p.InnerText.Trim());
+                var parts = fullText.Split(')');
+                if (parts.Length < 2)
+                    continue;
+
+                string startingYear = parts[1].Trim().Split("-")[0];
+
+                if(int.Parse(startingYear) >= year) {
+                    var fullUrl = $"https://www.pro-football-reference.com{href}";
+
+                    var player = await GetPlayerByUrl(fullUrl);
+                    players.Add(player);
+                }
+
+            }
+        
+        }
+
+        public async Task<Player> GetPlayerByUrl(string url) {
+
+            var html = await httpHelper.GetHtmlAsync(url);
+
+            var htmlDoc = new HtmlDocument();
+            htmlDoc.LoadHtml(html);
+
+            // Get player name from the <h1> tag with itemprop="name"
+            var nameNode = htmlDoc.DocumentNode.SelectSingleNode("//div[contains(@class,'players')]//h1//span");
+            string playerName = nameNode?.InnerText.Trim() ?? "Unknown";
+
+            // Get birth date from the <span> with id="necro-birth"
+            var birthNode = htmlDoc.DocumentNode.SelectSingleNode("//*[@data-birth]");
+            string birthDate = birthNode.GetAttributeValue("data-birth", null);
+
+            string[] nameParts = playerName.Split(' ', StringSplitOptions.RemoveEmptyEntries);
+
+            string firstName = nameParts.Length > 0 ? nameParts[0] : "";
+            string middleName = nameParts.Length == 3 ? nameParts[1] : "";
+            string lastName = nameParts.Length == 3 ? nameParts[2] :
+                              nameParts.Length == 2 ? nameParts[1] : "";
+
+            // Construct the player object
+            var player = new Player(0, firstName, middleName, lastName, DateTime.Parse(birthDate));
+
+            return player;
+        }
+
+        public async Task<List<Team>> GetTeams() {
+
+            var url = "https://www.pro-football-reference.com/teams/";
+
+            var httpClient = new HttpClient();
+
+            var html = await httpHelper.GetHtmlAsync(url);
+
+            var htmlDoc = new HtmlDocument();
+
+            htmlDoc.LoadHtml(html);
+
+            var table = htmlDoc.DocumentNode.SelectSingleNode("//table[@id='teams_active']");
+
+            if (table == null) {
+                Console.WriteLine("⚠️ Could not find the active teams table.");
+                return null;
+            }
+
+            var rows = table.SelectNodes(".//tbody/tr[not(contains(@class, 'thead'))]");
+
+            List<Team> teams = new();
+
+            foreach (var row in rows) {
+
+                var teamNameCols = row.SelectNodes("th");
+
+                var teamName = teamNameCols[0].InnerText.Trim();
+
+                var cols = row.SelectNodes("td");
+
+                if (cols == null || cols.Count < 2)
+                    continue;
+
+                
+                string fromYear = "", toYear = "";
+
+                fromYear = cols[0].InnerText.Trim();
+                toYear = cols[1].InnerText.Trim();
+
+                var team = new Team(0, teamName, "", "", new DateTime(int.Parse(fromYear), 1, 1), new DateTime(int.Parse(toYear), 1, 1));
+
+                teams.Add(team);
+            }
+
+            return teams;
+        }
+
+        public async Task<List<string>> GeetWeeklyGameUrls(string url, int week, int year) {
+
+            List<string> weeklyGameUrls = [];
+
+            var httpClient = new HttpClient();
+
+            var html = await httpClient.GetStringAsync(url);
+
+            var doc = new HtmlDocument();
+
+            doc.LoadHtml(html);
+
+            var gameLinks = doc.DocumentNode.SelectNodes(".//td[contains(@class,'gamelink')]");
+
+            foreach(var gameLink in gameLinks) {
+
+                // Regex to extract the value inside href="/boxscores/..."
+                var match = Regex.Match(gameLink.InnerHtml, @"href=""/boxscores/([^""]+\.htm)""");
+
+                if (match.Success) {
+
+                    string result = match.Groups[1].Value;
+
+                    weeklyGameUrls.Add($"https://www.pro-football-reference.com/boxscores/{result}");
+                }
+            }
+
+            return weeklyGameUrls;
+        }
+
         public async Task ScrapeRushingStats(string url)
         {
             var httpClient = new HttpClient();
@@ -80,7 +230,7 @@ namespace DataScraper
             }
         }
 
-        public async Task ScrapePassingStats(string url)
+        public async Task<List<GamePlayerPassingStats>> ScrapePassingStats(string url)
         {
             var httpClient = new HttpClient();
             var html = await httpClient.GetStringAsync(url);
@@ -174,6 +324,8 @@ namespace DataScraper
                     }
                 }
             }
+
+            return passingStats;
         }
 
         private int ParseInt(string text)

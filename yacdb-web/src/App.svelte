@@ -19,7 +19,7 @@
   }
 </script>
 <div class="" style="padding-left:8px; margin-bottom:12px; font-size:32px; font-weight: bold">
-YacDB
+yac-db
 </div>
 <div class="container">
 
