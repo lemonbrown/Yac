@@ -12,10 +12,12 @@ namespace YacData
     {
         public DbSet<GamePlayerPassingStats> GamePlayerPassingStats { get; set; }
 
+        public DbSet<Team> Teams { get; set; }
+
         public YacDataContext(DbContextOptions options) : base(options)
         {
+            SQLitePCL.Batteries.Init();
+
         }
-
-
     }
 }

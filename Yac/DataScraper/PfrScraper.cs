@@ -1,20 +1,22 @@
 ﻿using DataScraper.Helpers;
+using DataScraper.Models;
 using HtmlAgilityPack;
-using Microsoft.Playwright;
 using System.Net;
 using System.Text.RegularExpressions;
 using YacData;
 using YacData.Models;
 using static System.Net.Mime.MediaTypeNames;
 
-namespace DataScraper {
+namespace DataScraper
+{
 
 
 
     class PfrScraper(YacDataService yacDataService, HttpHelper httpHelper)
     {
 
-        public async Task GetPlayersAlphabetically(string letter, int year = 2000) {
+        public async Task GetPlayersAlphabetically(string letter, int year = 2000)
+        {
 
             var url = $"https://www.pro-football-reference.com/players/{letter}";
 
@@ -28,13 +30,14 @@ namespace DataScraper {
 
             var paragraphs = htmlDoc.DocumentNode.SelectNodes("//div[@id='div_players']/p");
 
-            foreach (var p in paragraphs) {
+            foreach (var p in paragraphs)
+            {
                 var aNode = p.Descendants("a").FirstOrDefault();
                 if (aNode == null)
                     continue;
 
                 string href = aNode.GetAttributeValue("href", "");
-                
+
 
                 // Get all text content and extract years from the tail
                 string fullText = WebUtility.HtmlDecode(p.InnerText.Trim());
@@ -44,7 +47,8 @@ namespace DataScraper {
 
                 string startingYear = parts[1].Trim().Split("-")[0];
 
-                if(int.Parse(startingYear) >= year) {
+                if (int.Parse(startingYear) >= year)
+                {
                     var fullUrl = $"https://www.pro-football-reference.com{href}";
 
                     var player = await GetPlayerByUrl(fullUrl);
@@ -52,10 +56,11 @@ namespace DataScraper {
                 }
 
             }
-        
+
         }
 
-        public async Task<Player> GetPlayerByUrl(string url) {
+        public async Task<Player> GetPlayerByUrl(string url)
+        {
 
             var html = await httpHelper.GetHtmlAsync(url);
 
@@ -83,7 +88,8 @@ namespace DataScraper {
             return player;
         }
 
-        public async Task<List<Team>> GetTeams() {
+        public async Task<List<Team>> GetTeams()
+        {
 
             var url = "https://www.pro-football-reference.com/teams/";
 
@@ -97,7 +103,8 @@ namespace DataScraper {
 
             var table = htmlDoc.DocumentNode.SelectSingleNode("//table[@id='teams_active']");
 
-            if (table == null) {
+            if (table == null)
+            {
                 Console.WriteLine("⚠️ Could not find the active teams table.");
                 return null;
             }
@@ -106,7 +113,8 @@ namespace DataScraper {
 
             List<Team> teams = new();
 
-            foreach (var row in rows) {
+            foreach (var row in rows)
+            {
 
                 var teamNameCols = row.SelectNodes("th");
 
@@ -117,13 +125,21 @@ namespace DataScraper {
                 if (cols == null || cols.Count < 2)
                     continue;
 
-                
+
                 string fromYear = "", toYear = "";
 
                 fromYear = cols[0].InnerText.Trim();
+
                 toYear = cols[1].InnerText.Trim();
 
-                var team = new Team(0, teamName, "", "", new DateTime(int.Parse(fromYear), 1, 1), new DateTime(int.Parse(toYear), 1, 1));
+                var team = new Team()
+                {
+                    Name = teamName,
+
+                    ActiveStartDateTime = new DateTime(int.Parse(fromYear), 1, 1),
+
+                    ActiveEndDateTime = new DateTime(int.Parse(toYear), 1, 1)
+                };
 
                 teams.Add(team);
             }
@@ -131,13 +147,13 @@ namespace DataScraper {
             return teams;
         }
 
-        public async Task<List<string>> GeetWeeklyGameUrls(string url, int week, int year) {
+        public async Task<List<string>> GeetWeeklyGameUrls(string url, int week, int year)
+        {
 
             List<string> weeklyGameUrls = [];
 
-            var httpClient = new HttpClient();
-
-            var html = await httpClient.GetStringAsync(url);
+            
+            var html = await httpHelper.GetHtmlAsync(url);
 
             var doc = new HtmlDocument();
 
@@ -145,12 +161,14 @@ namespace DataScraper {
 
             var gameLinks = doc.DocumentNode.SelectNodes(".//td[contains(@class,'gamelink')]");
 
-            foreach(var gameLink in gameLinks) {
+            foreach (var gameLink in gameLinks)
+            {
 
                 // Regex to extract the value inside href="/boxscores/..."
                 var match = Regex.Match(gameLink.InnerHtml, @"href=""/boxscores/([^""]+\.htm)""");
 
-                if (match.Success) {
+                if (match.Success)
+                {
 
                     string result = match.Groups[1].Value;
 
@@ -187,7 +205,7 @@ namespace DataScraper {
 
                     var cells = row.SelectNodes(".//td");
 
-                    if(cells != null)
+                    if (cells != null)
                     {
                         var team = cells[0].InnerText.Trim();         // Tm
 
@@ -230,12 +248,12 @@ namespace DataScraper {
             }
         }
 
-        public async Task<List<GamePlayerPassingStats>> ScrapePassingStats(string url)
+        public async Task<List<PassingStats>> ScrapePassingStats(string url)
         {
             var httpClient = new HttpClient();
             var html = await httpClient.GetStringAsync(url);
 
-            var passingStats = new List<GamePlayerPassingStats>();
+            var passingStats = new List<PassingStats>();
 
             html = html.Replace("<!--", "").Replace("-->", "");
 
@@ -282,45 +300,50 @@ namespace DataScraper {
                         var scrambles = cells[23].InnerText.Trim();     // Scrm
                         var yardsPerScramble = cells[24].InnerText.Trim(); // Yds/Scr
 
-                        var stats = new GamePlayerPassingStats
-                        {
-                            // Set PlayerId, TeamId, GameId using your logic or lookups
-                            Completions = ParseInt(completions),
-                            Attempts = ParseInt(attempts),
-                            Yards = ParseInt(yards),
-                            FirstDowns = ParseInt(firstDowns),
-                            FirstDownRate = ParseDouble(firstDownPct),
+                        var stats =
+                            new PassingStats
+                            {
+                                PlayerName = player,
+                                TeamName = team,
+                                GamePlayerPassingStats =
+                                    new GamePlayerPassingStats
+                                    {
+                                        // Set PlayerId, TeamId, GameId using your logic or lookups
+                                        Completions = ParseInt(completions),
+                                        Attempts = ParseInt(attempts),
+                                        Yards = ParseInt(yards),
+                                        FirstDowns = ParseInt(firstDowns),
+                                        FirstDownRate = ParseDouble(firstDownPct),
 
-                            IntendedAirYards = ParseDouble(iay),
-                            IntendedAirYardsPerAttempt = ParseDouble(iayPerAtt),
+                                        IntendedAirYards = ParseDouble(iay),
+                                        IntendedAirYardsPerAttempt = ParseDouble(iayPerAtt),
 
-                            CompletedAirYards = ParseDouble(cay),
-                            CompletedAirYardsPerCompletion = ParseDouble(cayPerCmp),
-                            CompletedAirYardsPerAttempt = ParseDouble(cayPerAtt),
+                                        CompletedAirYards = ParseDouble(cay),
+                                        CompletedAirYardsPerCompletion = ParseDouble(cayPerCmp),
+                                        CompletedAirYardsPerAttempt = ParseDouble(cayPerAtt),
 
-                            YardsAfterCatch = ParseInt(yac),
-                            YardsAfterCatchPerCompletion = ParseDouble(yacPerCmp),
+                                        YardsAfterCatch = ParseInt(yac),
+                                        YardsAfterCatchPerCompletion = ParseDouble(yacPerCmp),
 
-                            Drops = ParseInt(drops),
-                            DropRate = ParseDouble(dropPct),
+                                        Drops = ParseInt(drops),
+                                        DropRate = ParseDouble(dropPct),
 
-                            BadThrows = ParseInt(badThrows),
-                            BadThrowRate = ParseDouble(badThrowPct),
+                                        BadThrows = ParseInt(badThrows),
+                                        BadThrowRate = ParseDouble(badThrowPct),
 
-                            Sacks = ParseInt(sacks),
-                            BlitzesFaced = ParseInt(blitzes),
-                            Hurries = ParseInt(hurries),
-                            QBHits = ParseInt(hits),
-                            Pressures = ParseInt(pressures),
-                            PressureRate = ParseDouble(pressurePct),
+                                        Sacks = ParseInt(sacks),
+                                        BlitzesFaced = ParseInt(blitzes),
+                                        Hurries = ParseInt(hurries),
+                                        QBHits = ParseInt(hits),
+                                        Pressures = ParseInt(pressures),
+                                        PressureRate = ParseDouble(pressurePct),
 
-                            Scrambles = ParseInt(scrambles),
-                            YardsPerScramble = ParseDouble(yardsPerScramble)
-                        };
+                                        Scrambles = ParseInt(scrambles),
+                                        YardsPerScramble = ParseDouble(yardsPerScramble)
+                                    }
+                            };
 
                         passingStats.Add(stats);
-
-                        //await yacDataService.InsertPassingStat(passingStats);
                     }
                 }
             }
