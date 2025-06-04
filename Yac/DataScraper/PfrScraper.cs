@@ -1,16 +1,14 @@
 ﻿using DataScraper.Helpers;
 using DataScraper.Models;
 using HtmlAgilityPack;
+using NFLScraper;
 using System.Net;
 using System.Text.RegularExpressions;
 using YacData;
 using YacData.Models;
-using static System.Net.Mime.MediaTypeNames;
 
 namespace DataScraper
 {
-
-
 
     class PfrScraper(YacDataService yacDataService, HttpHelper httpHelper)
     {
@@ -26,7 +24,7 @@ namespace DataScraper
 
             htmlDoc.LoadHtml(html);
 
-            var players = new List<Player>();
+            var players = new List<YacData.Models.Player>();
 
             var paragraphs = htmlDoc.DocumentNode.SelectNodes("//div[@id='div_players']/p");
 
@@ -59,7 +57,7 @@ namespace DataScraper
 
         }
 
-        public async Task<Player> GetPlayerByUrl(string url)
+        public async Task<YacData.Models.Player> GetPlayerByUrl(string url)
         {
 
             var html = await httpHelper.GetHtmlAsync(url);
@@ -83,18 +81,15 @@ namespace DataScraper
                               nameParts.Length == 2 ? nameParts[1] : "";
 
             // Construct the player object
-            var player = new Player(0, firstName, middleName, lastName, DateTime.Parse(birthDate));
+            var player = new YacData.Models.Player(0, firstName, middleName, lastName, DateTime.Parse(birthDate));
 
             return player;
         }
 
-        public async Task<List<Team>> GetTeams()
+        public async Task<List<PfrTeam>> GetTeams()
         {
-
             var url = "https://www.pro-football-reference.com/teams/";
-
-            var httpClient = new HttpClient();
-
+            
             var html = await httpHelper.GetHtmlAsync(url);
 
             var htmlDoc = new HtmlDocument();
@@ -111,12 +106,17 @@ namespace DataScraper
 
             var rows = table.SelectNodes(".//tbody/tr[not(contains(@class, 'thead'))]");
 
-            List<Team> teams = new();
+            List<PfrTeam> teams = new();
 
             foreach (var row in rows)
             {
 
                 var teamNameCols = row.SelectNodes("th");
+
+                var teamUrl = row.SelectSingleNode("th/a")?.Attributes.FirstOrDefault()?.Value;
+
+                var turl = $"https://www.pro-football-reference.com{teamUrl}";
+
 
                 var teamName = teamNameCols[0].InnerText.Trim();
 
@@ -138,17 +138,25 @@ namespace DataScraper
 
                     ActiveStartDateTime = new DateTime(int.Parse(fromYear), 1, 1),
 
-                    ActiveEndDateTime = new DateTime(int.Parse(toYear), 1, 1)
+                    ActiveEndDateTime = new DateTime(int.Parse(toYear), 1, 1),
+
+                    Divison = ParseInt(cols[18].InnerText)
                 };
 
-                teams.Add(team);
+                var pfrTeam = new PfrTeam() {
+                    Team = team,
+                    Url = turl
+                };
+
+                teams.Add(pfrTeam);
             }
 
             return teams;
         }
 
-        public async Task<List<string>> GeetWeeklyGameUrls(string url, int week, int year)
+        public async Task<List<string>> GeetWeeklyGameUrls(int week, int year)
         {
+            string url = $"https://www.pro-football-reference.com/years/{year}/week_{week}.htm";
 
             List<string> weeklyGameUrls = [];
 
@@ -181,8 +189,7 @@ namespace DataScraper
 
         public async Task ScrapeRushingStats(string url)
         {
-            var httpClient = new HttpClient();
-            var html = await httpClient.GetStringAsync(url);
+            var html = await httpHelper.GetHtmlAsync(url);
 
             var rushingStats = new List<GamePlayerRushingStats>();
 
@@ -248,108 +255,117 @@ namespace DataScraper
             }
         }
 
-        public async Task<List<PassingStats>> ScrapePassingStats(string url)
-        {
-            var httpClient = new HttpClient();
-            var html = await httpClient.GetStringAsync(url);
+        public async Task<GameData> ScrapeWeeklyGameStats(string url) {
 
-            var passingStats = new List<PassingStats>();
+            NFLGameScraper nFLGameScraper = new NFLGameScraper(httpHelper);
 
-            html = html.Replace("<!--", "").Replace("-->", "");
+            var gameData = await nFLGameScraper.ScrapeGameAsync(url);
 
-            var doc = new HtmlDocument();
-            doc.LoadHtml(html);
+            return gameData;
 
-            // Example: Parse advanced passing
-            var passingTable = doc.GetElementbyId("passing_advanced");
-            if (passingTable != null)
-            {
-                var rows = passingTable.SelectNodes(".//tbody/tr[not(contains(@class,'thead'))]");
-                foreach (var row in rows)
-                {
-                    var thCell = row.SelectNodes(".//th");
-
-                    var player = thCell[0].InnerText.Trim();
-
-                    var cells = row.SelectNodes(".//td");
-                    if (cells != null)
-                    {
-                        var team = cells[0].InnerText.Trim();
-                        var completions = cells[1].InnerText.Trim();    // Cmp
-                        var attempts = cells[2].InnerText.Trim();       // Att
-                        var yards = cells[3].InnerText.Trim();          // Yds
-                        var firstDowns = cells[4].InnerText.Trim();     // 1D
-                        var firstDownPct = cells[5].InnerText.Trim();   // 1D%
-                        var iay = cells[6].InnerText.Trim();            // IAY (Intended Air Yards)
-                        var iayPerAtt = cells[7].InnerText.Trim();      // IAY/PA
-                        var cay = cells[8].InnerText.Trim();            // CAY (Completed Air Yards)
-                        var cayPerCmp = cells[9].InnerText.Trim();     // CAY/Cmp
-                        var cayPerAtt = cells[10].InnerText.Trim();     // CAY/PA
-                        var yac = cells[11].InnerText.Trim();           // YAC
-                        var yacPerCmp = cells[12].InnerText.Trim();     // YAC/Cmp
-                        var drops = cells[13].InnerText.Trim();         // Drops
-                        var dropPct = cells[14].InnerText.Trim();       // Drop%
-                        var badThrows = cells[15].InnerText.Trim();     // BadTh
-                        var badThrowPct = cells[16].InnerText.Trim();   // Bad%
-                        var sacks = cells[17].InnerText.Trim();         // Sk
-                        var blitzes = cells[18].InnerText.Trim();       // Bltz
-                        var hurries = cells[19].InnerText.Trim();       // Hrry
-                        var hits = cells[20].InnerText.Trim();          // Hits
-                        var pressures = cells[21].InnerText.Trim();     // Prss
-                        var pressurePct = cells[22].InnerText.Trim();   // Prss%
-                        var scrambles = cells[23].InnerText.Trim();     // Scrm
-                        var yardsPerScramble = cells[24].InnerText.Trim(); // Yds/Scr
-
-                        var stats =
-                            new PassingStats
-                            {
-                                PlayerName = player,
-                                TeamName = team,
-                                GamePlayerPassingStats =
-                                    new GamePlayerPassingStats
-                                    {
-                                        // Set PlayerId, TeamId, GameId using your logic or lookups
-                                        Completions = ParseInt(completions),
-                                        Attempts = ParseInt(attempts),
-                                        Yards = ParseInt(yards),
-                                        FirstDowns = ParseInt(firstDowns),
-                                        FirstDownRate = ParseDouble(firstDownPct),
-
-                                        IntendedAirYards = ParseDouble(iay),
-                                        IntendedAirYardsPerAttempt = ParseDouble(iayPerAtt),
-
-                                        CompletedAirYards = ParseDouble(cay),
-                                        CompletedAirYardsPerCompletion = ParseDouble(cayPerCmp),
-                                        CompletedAirYardsPerAttempt = ParseDouble(cayPerAtt),
-
-                                        YardsAfterCatch = ParseInt(yac),
-                                        YardsAfterCatchPerCompletion = ParseDouble(yacPerCmp),
-
-                                        Drops = ParseInt(drops),
-                                        DropRate = ParseDouble(dropPct),
-
-                                        BadThrows = ParseInt(badThrows),
-                                        BadThrowRate = ParseDouble(badThrowPct),
-
-                                        Sacks = ParseInt(sacks),
-                                        BlitzesFaced = ParseInt(blitzes),
-                                        Hurries = ParseInt(hurries),
-                                        QBHits = ParseInt(hits),
-                                        Pressures = ParseInt(pressures),
-                                        PressureRate = ParseDouble(pressurePct),
-
-                                        Scrambles = ParseInt(scrambles),
-                                        YardsPerScramble = ParseDouble(yardsPerScramble)
-                                    }
-                            };
-
-                        passingStats.Add(stats);
-                    }
-                }
-            }
-
-            return passingStats;
         }
+
+        //public async Task<List<PassingStats>> ScrapePassingStats(string url)
+        //{
+        //    var html = await httpHelper.GetHtmlAsync(url);
+
+        //    var passingStats = new List<PassingStats>();
+
+        //    html = html.Replace("<!--", "").Replace("-->", "");
+
+        //    var doc = new HtmlDocument();
+        //    doc.LoadHtml(html);
+
+        //    // Example: Parse advanced passing
+        //    var passingTable = doc.GetElementbyId("passing_advanced");
+        //    if (passingTable != null)
+        //    {
+        //        var rows = passingTable.SelectNodes(".//tbody/tr[not(contains(@class,'thead'))]");
+        //        foreach (var row in rows)
+        //        {
+        //            var thCell = row.SelectNodes(".//th");
+
+        //            var player = thCell[0].InnerText.Trim();
+
+        //            var cells = row.SelectNodes(".//td");
+        //            if (cells != null)
+        //            {
+        //                var team = cells[0].InnerText.Trim();
+        //                var completions = cells[1].InnerText.Trim();    // Cmp
+        //                var attempts = cells[2].InnerText.Trim();       // Att
+        //                var yards = cells[3].InnerText.Trim();          // Yds
+        //                var firstDowns = cells[4].InnerText.Trim();     // 1D
+        //                var firstDownPct = cells[5].InnerText.Trim();   // 1D%
+        //                var iay = cells[6].InnerText.Trim();            // IAY (Intended Air Yards)
+        //                var iayPerAtt = cells[7].InnerText.Trim();      // IAY/PA
+        //                var cay = cells[8].InnerText.Trim();            // CAY (Completed Air Yards)
+        //                var cayPerCmp = cells[9].InnerText.Trim();     // CAY/Cmp
+        //                var cayPerAtt = cells[10].InnerText.Trim();     // CAY/PA
+        //                var yac = cells[11].InnerText.Trim();           // YAC
+        //                var yacPerCmp = cells[12].InnerText.Trim();     // YAC/Cmp
+        //                var drops = cells[13].InnerText.Trim();         // Drops
+        //                var dropPct = cells[14].InnerText.Trim();       // Drop%
+        //                var badThrows = cells[15].InnerText.Trim();     // BadTh
+        //                var badThrowPct = cells[16].InnerText.Trim();   // Bad%
+        //                var sacks = cells[17].InnerText.Trim();         // Sk
+        //                var blitzes = cells[18].InnerText.Trim();       // Bltz
+        //                var hurries = cells[19].InnerText.Trim();       // Hrry
+        //                var hits = cells[20].InnerText.Trim();          // Hits
+        //                var pressures = cells[21].InnerText.Trim();     // Prss
+        //                var pressurePct = cells[22].InnerText.Trim();   // Prss%
+        //                var scrambles = cells[23].InnerText.Trim();     // Scrm
+        //                var yardsPerScramble = cells[24].InnerText.Trim(); // Yds/Scr
+
+        //                //var stats =
+        //                //    new PassingStats
+        //                //    {
+        //                //        PlayerName = player,
+        //                //        TeamName = team,
+        //                //        GamePlayerPassingStats =
+        //                //            new GamePlayerPassingStats
+        //                //            {
+        //                //                // Set PlayerId, TeamId, GameId using your logic or lookups
+        //                //                Completions = ParseInt(completions),
+        //                //                Attempts = ParseInt(attempts),
+        //                //                Yards = ParseInt(yards),
+        //                //                FirstDowns = ParseInt(firstDowns),
+        //                //                FirstDownRate = ParseDouble(firstDownPct),
+
+        //                //                IntendedAirYards = ParseDouble(iay),
+        //                //                IntendedAirYardsPerAttempt = ParseDouble(iayPerAtt),
+
+        //                //                CompletedAirYards = ParseDouble(cay),
+        //                //                CompletedAirYardsPerCompletion = ParseDouble(cayPerCmp),
+        //                //                CompletedAirYardsPerAttempt = ParseDouble(cayPerAtt),
+
+        //                //                YardsAfterCatch = ParseInt(yac),
+        //                //                YardsAfterCatchPerCompletion = ParseDouble(yacPerCmp),
+
+        //                //                Drops = ParseInt(drops),
+        //                //                DropRate = ParseDouble(dropPct),
+
+        //                //                BadThrows = ParseInt(badThrows),
+        //                //                BadThrowRate = ParseDouble(badThrowPct),
+
+        //                //                Sacks = ParseInt(sacks),
+        //                //                BlitzesFaced = ParseInt(blitzes),
+        //                //                Hurries = ParseInt(hurries),
+        //                //                QBHits = ParseInt(hits),
+        //                //                Pressures = ParseInt(pressures),
+        //                //                PressureRate = ParseDouble(pressurePct),
+
+        //                //                Scrambles = ParseInt(scrambles),
+        //                //                YardsPerScramble = ParseDouble(yardsPerScramble)
+        //                //            }
+        //                //    };
+
+        //                //passingStats.Add(stats);
+        //            }
+        //        }
+        //    }
+
+        //    return passingStats;
+        //}
 
         private int ParseInt(string text)
         {
@@ -362,5 +378,7 @@ namespace DataScraper
         }
 
     }
+
+
 
 }
