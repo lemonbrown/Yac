@@ -25,16 +25,20 @@ const AppLayout: React.FC = () => {
       // In a real app, this would be an API call to execute the query
       // For now, we'll simulate a response with mock data
       await new Promise(resolve => setTimeout(resolve, 800));
+
+      const response = await fetch('http://localhost:5000/yql', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ query: currentQuery })
+      });
+
+      const result: any[] = await response.json();
       
       const mockResult: QueryResult = {
-        columns: ['player_id', 'name', 'team', 'position', 'yards', 'touchdowns'],
-        rows: [
-          { player_id: 1, name: 'Patrick Mahomes', team: 'KC', position: 'QB', yards: 5250, touchdowns: 41 },
-          { player_id: 2, name: 'Justin Jefferson', team: 'MIN', position: 'WR', yards: 1809, touchdowns: 8 },
-          { player_id: 3, name: 'Travis Kelce', team: 'KC', position: 'TE', yards: 1338, touchdowns: 12 },
-          { player_id: 4, name: 'Christian McCaffrey', team: 'SF', position: 'RB', yards: 1459, touchdowns: 14 },
-          { player_id: 5, name: 'Tyreek Hill', team: 'MIA', position: 'WR', yards: 1710, touchdowns: 7 },
-        ],
+        columns: Object.keys(result[0]),
+        rows: result,
         executionTime: 0.12,
         rowCount: 5
       };

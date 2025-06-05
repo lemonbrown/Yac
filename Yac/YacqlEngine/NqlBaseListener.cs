@@ -96,6 +96,18 @@ public partial class NqlBaseListener : INqlListener {
 	/// <param name="context">The parse tree.</param>
 	public virtual void ExitCompareQuery([NotNull] NqlParser.CompareQueryContext context) { }
 	/// <summary>
+	/// Enter a parse tree produced by <see cref="NqlParser.seasonQuery"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void EnterSeasonQuery([NotNull] NqlParser.SeasonQueryContext context) { }
+	/// <summary>
+	/// Exit a parse tree produced by <see cref="NqlParser.seasonQuery"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void ExitSeasonQuery([NotNull] NqlParser.SeasonQueryContext context) { }
+	/// <summary>
 	/// Enter a parse tree produced by <see cref="NqlParser.compareTarget"/>.
 	/// <para>The default implementation does nothing.</para>
 	/// </summary>
@@ -156,29 +168,33 @@ public partial class NqlBaseListener : INqlListener {
 	/// <param name="context">The parse tree.</param>
 	public virtual void ExitFieldSelection([NotNull] NqlParser.FieldSelectionContext context) { }
 	/// <summary>
-	/// Enter a parse tree produced by <see cref="NqlParser.fieldExpr"/>.
+	/// Enter a parse tree produced by the <c>totalField</c>
+	/// labeled alternative in <see cref="NqlParser.field"/>.
 	/// <para>The default implementation does nothing.</para>
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
-	public virtual void EnterFieldExpr([NotNull] NqlParser.FieldExprContext context) { }
+	public virtual void EnterTotalField([NotNull] NqlParser.TotalFieldContext context) { }
 	/// <summary>
-	/// Exit a parse tree produced by <see cref="NqlParser.fieldExpr"/>.
+	/// Exit a parse tree produced by the <c>totalField</c>
+	/// labeled alternative in <see cref="NqlParser.field"/>.
 	/// <para>The default implementation does nothing.</para>
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
-	public virtual void ExitFieldExpr([NotNull] NqlParser.FieldExprContext context) { }
+	public virtual void ExitTotalField([NotNull] NqlParser.TotalFieldContext context) { }
 	/// <summary>
-	/// Enter a parse tree produced by <see cref="NqlParser.field"/>.
+	/// Enter a parse tree produced by the <c>nameField</c>
+	/// labeled alternative in <see cref="NqlParser.field"/>.
 	/// <para>The default implementation does nothing.</para>
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
-	public virtual void EnterField([NotNull] NqlParser.FieldContext context) { }
+	public virtual void EnterNameField([NotNull] NqlParser.NameFieldContext context) { }
 	/// <summary>
-	/// Exit a parse tree produced by <see cref="NqlParser.field"/>.
+	/// Exit a parse tree produced by the <c>nameField</c>
+	/// labeled alternative in <see cref="NqlParser.field"/>.
 	/// <para>The default implementation does nothing.</para>
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
-	public virtual void ExitField([NotNull] NqlParser.FieldContext context) { }
+	public virtual void ExitNameField([NotNull] NqlParser.NameFieldContext context) { }
 	/// <summary>
 	/// Enter a parse tree produced by <see cref="NqlParser.whereClause"/>.
 	/// <para>The default implementation does nothing.</para>

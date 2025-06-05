@@ -38,26 +38,28 @@ public partial class NqlParser : Parser {
 	public const int
 		T__0=1, T__1=2, T__2=3, T__3=4, T__4=5, T__5=6, T__6=7, T__7=8, T__8=9, 
 		T__9=10, T__10=11, T__11=12, T__12=13, T__13=14, T__14=15, T__15=16, T__16=17, 
-		T__17=18, T__18=19, NAME=20, NUMBER=21, WS=22;
+		T__17=18, T__18=19, NAME=20, NUMBER=21, WS=22, STRING=23, AGGREGATE=24;
 	public const int
 		RULE_query = 0, RULE_playerQuery = 1, RULE_teamQuery = 2, RULE_gameQuery = 3, 
-		RULE_compareQuery = 4, RULE_compareTarget = 5, RULE_playerList = 6, RULE_teamList = 7, 
-		RULE_gameList = 8, RULE_fieldSelection = 9, RULE_fieldExpr = 10, RULE_field = 11, 
+		RULE_compareQuery = 4, RULE_seasonQuery = 5, RULE_compareTarget = 6, RULE_playerList = 7, 
+		RULE_teamList = 8, RULE_gameList = 9, RULE_fieldSelection = 10, RULE_field = 11, 
 		RULE_whereClause = 12, RULE_condition = 13, RULE_operator = 14, RULE_value = 15;
 	public static readonly string[] ruleNames = {
-		"query", "playerQuery", "teamQuery", "gameQuery", "compareQuery", "compareTarget", 
-		"playerList", "teamList", "gameList", "fieldSelection", "fieldExpr", "field", 
-		"whereClause", "condition", "operator", "value"
+		"query", "playerQuery", "teamQuery", "gameQuery", "compareQuery", "seasonQuery", 
+		"compareTarget", "playerList", "teamList", "gameList", "fieldSelection", 
+		"field", "whereClause", "condition", "operator", "value"
 	};
 
 	private static readonly string[] _LiteralNames = {
 		null, "'player:'", "'stats'", "'team:'", "'schedule'", "'record'", "'games'", 
-		"'compare'", "'players'", "':'", "'teams'", "','", "'/'", "'where'", "'and'", 
-		"'='", "'>'", "'<'", "'>='", "'<='"
+		"'compare'", "'seasons'", "'players'", "':'", "'teams'", "','", "'where'", 
+		"'and'", "'='", "'>'", "'<'", "'>='", "'<='", null, null, null, null, 
+		"'total'"
 	};
 	private static readonly string[] _SymbolicNames = {
 		null, null, null, null, null, null, null, null, null, null, null, null, 
-		null, null, null, null, null, null, null, null, "NAME", "NUMBER", "WS"
+		null, null, null, null, null, null, null, null, "NAME", "NUMBER", "WS", 
+		"STRING", "AGGREGATE"
 	};
 	public static readonly IVocabulary DefaultVocabulary = new Vocabulary(_LiteralNames, _SymbolicNames);
 
@@ -104,6 +106,9 @@ public partial class NqlParser : Parser {
 		[System.Diagnostics.DebuggerNonUserCode] public CompareQueryContext compareQuery() {
 			return GetRuleContext<CompareQueryContext>(0);
 		}
+		[System.Diagnostics.DebuggerNonUserCode] public SeasonQueryContext seasonQuery() {
+			return GetRuleContext<SeasonQueryContext>(0);
+		}
 		public QueryContext(ParserRuleContext parent, int invokingState)
 			: base(parent, invokingState)
 		{
@@ -132,7 +137,7 @@ public partial class NqlParser : Parser {
 		QueryContext _localctx = new QueryContext(Context, State);
 		EnterRule(_localctx, 0, RULE_query);
 		try {
-			State = 36;
+			State = 37;
 			ErrorHandler.Sync(this);
 			switch (TokenStream.LA(1)) {
 			case T__0:
@@ -161,6 +166,13 @@ public partial class NqlParser : Parser {
 				{
 				State = 35;
 				compareQuery();
+				}
+				break;
+			case T__7:
+				EnterOuterAlt(_localctx, 5);
+				{
+				State = 36;
+				seasonQuery();
 				}
 				break;
 			default:
@@ -214,18 +226,18 @@ public partial class NqlParser : Parser {
 		try {
 			EnterOuterAlt(_localctx, 1);
 			{
-			State = 38;
-			Match(T__0);
 			State = 39;
-			Match(NAME);
+			Match(T__0);
 			State = 40;
+			Match(NAME);
+			State = 41;
 			Match(T__1);
-			State = 42;
+			State = 43;
 			ErrorHandler.Sync(this);
 			_la = TokenStream.LA(1);
 			if (_la==T__12) {
 				{
-				State = 41;
+				State = 42;
 				whereClause();
 				}
 			}
@@ -279,11 +291,11 @@ public partial class NqlParser : Parser {
 		try {
 			EnterOuterAlt(_localctx, 1);
 			{
-			State = 44;
-			Match(T__2);
 			State = 45;
-			Match(NAME);
+			Match(T__2);
 			State = 46;
+			Match(NAME);
+			State = 47;
 			_la = TokenStream.LA(1);
 			if ( !(_la==T__3 || _la==T__4) ) {
 			ErrorHandler.RecoverInline(this);
@@ -292,12 +304,12 @@ public partial class NqlParser : Parser {
 				ErrorHandler.ReportMatch(this);
 			    Consume();
 			}
-			State = 48;
+			State = 49;
 			ErrorHandler.Sync(this);
 			_la = TokenStream.LA(1);
 			if (_la==T__12) {
 				{
-				State = 47;
+				State = 48;
 				whereClause();
 				}
 			}
@@ -349,9 +361,9 @@ public partial class NqlParser : Parser {
 		try {
 			EnterOuterAlt(_localctx, 1);
 			{
-			State = 50;
-			Match(T__5);
 			State = 51;
+			Match(T__5);
+			State = 52;
 			whereClause();
 			}
 		}
@@ -407,26 +419,99 @@ public partial class NqlParser : Parser {
 		try {
 			EnterOuterAlt(_localctx, 1);
 			{
-			State = 53;
-			Match(T__6);
 			State = 54;
+			Match(T__6);
+			State = 55;
 			compareTarget();
-			State = 56;
+			State = 57;
 			ErrorHandler.Sync(this);
 			_la = TokenStream.LA(1);
-			if (_la==NAME) {
+			if (_la==NAME || _la==AGGREGATE) {
 				{
-				State = 55;
+				State = 56;
 				fieldSelection();
 				}
 			}
 
-			State = 59;
+			State = 60;
 			ErrorHandler.Sync(this);
 			_la = TokenStream.LA(1);
 			if (_la==T__12) {
 				{
-				State = 58;
+				State = 59;
+				whereClause();
+				}
+			}
+
+			}
+		}
+		catch (RecognitionException re) {
+			_localctx.exception = re;
+			ErrorHandler.ReportError(this, re);
+			ErrorHandler.Recover(this, re);
+		}
+		finally {
+			ExitRule();
+		}
+		return _localctx;
+	}
+
+	public partial class SeasonQueryContext : ParserRuleContext {
+		[System.Diagnostics.DebuggerNonUserCode] public FieldSelectionContext fieldSelection() {
+			return GetRuleContext<FieldSelectionContext>(0);
+		}
+		[System.Diagnostics.DebuggerNonUserCode] public WhereClauseContext whereClause() {
+			return GetRuleContext<WhereClauseContext>(0);
+		}
+		public SeasonQueryContext(ParserRuleContext parent, int invokingState)
+			: base(parent, invokingState)
+		{
+		}
+		public override int RuleIndex { get { return RULE_seasonQuery; } }
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override void EnterRule(IParseTreeListener listener) {
+			INqlListener typedListener = listener as INqlListener;
+			if (typedListener != null) typedListener.EnterSeasonQuery(this);
+		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override void ExitRule(IParseTreeListener listener) {
+			INqlListener typedListener = listener as INqlListener;
+			if (typedListener != null) typedListener.ExitSeasonQuery(this);
+		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			INqlVisitor<TResult> typedVisitor = visitor as INqlVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitSeasonQuery(this);
+			else return visitor.VisitChildren(this);
+		}
+	}
+
+	[RuleVersion(0)]
+	public SeasonQueryContext seasonQuery() {
+		SeasonQueryContext _localctx = new SeasonQueryContext(Context, State);
+		EnterRule(_localctx, 10, RULE_seasonQuery);
+		int _la;
+		try {
+			EnterOuterAlt(_localctx, 1);
+			{
+			State = 62;
+			Match(T__7);
+			State = 64;
+			ErrorHandler.Sync(this);
+			_la = TokenStream.LA(1);
+			if (_la==NAME || _la==AGGREGATE) {
+				{
+				State = 63;
+				fieldSelection();
+				}
+			}
+
+			State = 67;
+			ErrorHandler.Sync(this);
+			_la = TokenStream.LA(1);
+			if (_la==T__12) {
+				{
+				State = 66;
 				whereClause();
 				}
 			}
@@ -480,48 +565,48 @@ public partial class NqlParser : Parser {
 	[RuleVersion(0)]
 	public CompareTargetContext compareTarget() {
 		CompareTargetContext _localctx = new CompareTargetContext(Context, State);
-		EnterRule(_localctx, 10, RULE_compareTarget);
+		EnterRule(_localctx, 12, RULE_compareTarget);
 		try {
-			State = 71;
+			State = 79;
 			ErrorHandler.Sync(this);
 			switch (TokenStream.LA(1)) {
-			case T__7:
+			case T__8:
 				EnterOuterAlt(_localctx, 1);
 				{
-				State = 61;
-				Match(T__7);
-				State = 62;
+				State = 69;
 				Match(T__8);
-				State = 63;
+				State = 70;
+				Match(T__9);
+				State = 71;
 				playerList();
 				}
 				break;
-			case T__9:
+			case T__10:
 				EnterOuterAlt(_localctx, 2);
 				{
-				State = 64;
+				State = 72;
+				Match(T__10);
+				State = 73;
 				Match(T__9);
-				State = 65;
-				Match(T__8);
-				State = 66;
+				State = 74;
 				teamList();
 				}
 				break;
 			case T__5:
 				EnterOuterAlt(_localctx, 3);
 				{
-				State = 67;
+				State = 75;
 				Match(T__5);
-				State = 68;
-				Match(T__8);
-				State = 69;
+				State = 76;
+				Match(T__9);
+				State = 77;
 				gameList();
 				}
 				break;
 			case NAME:
 				EnterOuterAlt(_localctx, 4);
 				{
-				State = 70;
+				State = 78;
 				teamList();
 				}
 				break;
@@ -571,26 +656,26 @@ public partial class NqlParser : Parser {
 	[RuleVersion(0)]
 	public PlayerListContext playerList() {
 		PlayerListContext _localctx = new PlayerListContext(Context, State);
-		EnterRule(_localctx, 12, RULE_playerList);
+		EnterRule(_localctx, 14, RULE_playerList);
 		int _la;
 		try {
 			EnterOuterAlt(_localctx, 1);
 			{
-			State = 73;
+			State = 81;
 			Match(NAME);
-			State = 78;
+			State = 86;
 			ErrorHandler.Sync(this);
 			_la = TokenStream.LA(1);
-			while (_la==T__10) {
+			while (_la==T__11) {
 				{
 				{
-				State = 74;
-				Match(T__10);
-				State = 75;
+				State = 82;
+				Match(T__11);
+				State = 83;
 				Match(NAME);
 				}
 				}
-				State = 80;
+				State = 88;
 				ErrorHandler.Sync(this);
 				_la = TokenStream.LA(1);
 			}
@@ -638,26 +723,26 @@ public partial class NqlParser : Parser {
 	[RuleVersion(0)]
 	public TeamListContext teamList() {
 		TeamListContext _localctx = new TeamListContext(Context, State);
-		EnterRule(_localctx, 14, RULE_teamList);
+		EnterRule(_localctx, 16, RULE_teamList);
 		int _la;
 		try {
 			EnterOuterAlt(_localctx, 1);
 			{
-			State = 81;
+			State = 89;
 			Match(NAME);
-			State = 86;
+			State = 94;
 			ErrorHandler.Sync(this);
 			_la = TokenStream.LA(1);
-			while (_la==T__10) {
+			while (_la==T__11) {
 				{
 				{
-				State = 82;
-				Match(T__10);
-				State = 83;
+				State = 90;
+				Match(T__11);
+				State = 91;
 				Match(NAME);
 				}
 				}
-				State = 88;
+				State = 96;
 				ErrorHandler.Sync(this);
 				_la = TokenStream.LA(1);
 			}
@@ -705,26 +790,26 @@ public partial class NqlParser : Parser {
 	[RuleVersion(0)]
 	public GameListContext gameList() {
 		GameListContext _localctx = new GameListContext(Context, State);
-		EnterRule(_localctx, 16, RULE_gameList);
+		EnterRule(_localctx, 18, RULE_gameList);
 		int _la;
 		try {
 			EnterOuterAlt(_localctx, 1);
 			{
-			State = 89;
+			State = 97;
 			Match(NAME);
-			State = 94;
+			State = 102;
 			ErrorHandler.Sync(this);
 			_la = TokenStream.LA(1);
-			while (_la==T__10) {
+			while (_la==T__11) {
 				{
 				{
-				State = 90;
-				Match(T__10);
-				State = 91;
+				State = 98;
+				Match(T__11);
+				State = 99;
 				Match(NAME);
 				}
 				}
-				State = 96;
+				State = 104;
 				ErrorHandler.Sync(this);
 				_la = TokenStream.LA(1);
 			}
@@ -742,11 +827,15 @@ public partial class NqlParser : Parser {
 	}
 
 	public partial class FieldSelectionContext : ParserRuleContext {
-		[System.Diagnostics.DebuggerNonUserCode] public FieldExprContext[] fieldExpr() {
-			return GetRuleContexts<FieldExprContext>();
+		[System.Diagnostics.DebuggerNonUserCode] public FieldContext[] field() {
+			return GetRuleContexts<FieldContext>();
 		}
-		[System.Diagnostics.DebuggerNonUserCode] public FieldExprContext fieldExpr(int i) {
-			return GetRuleContext<FieldExprContext>(i);
+		[System.Diagnostics.DebuggerNonUserCode] public FieldContext field(int i) {
+			return GetRuleContext<FieldContext>(i);
+		}
+		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode[] WS() { return GetTokens(NqlParser.WS); }
+		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode WS(int i) {
+			return GetToken(NqlParser.WS, i);
 		}
 		public FieldSelectionContext(ParserRuleContext parent, int invokingState)
 			: base(parent, invokingState)
@@ -774,26 +863,33 @@ public partial class NqlParser : Parser {
 	[RuleVersion(0)]
 	public FieldSelectionContext fieldSelection() {
 		FieldSelectionContext _localctx = new FieldSelectionContext(Context, State);
-		EnterRule(_localctx, 18, RULE_fieldSelection);
+		EnterRule(_localctx, 20, RULE_fieldSelection);
 		int _la;
 		try {
 			EnterOuterAlt(_localctx, 1);
 			{
-			State = 97;
-			fieldExpr();
-			State = 102;
+			State = 105;
+			field();
+			State = 110;
 			ErrorHandler.Sync(this);
 			_la = TokenStream.LA(1);
-			while (_la==T__10) {
+			while (_la==T__11 || _la==WS) {
 				{
 				{
-				State = 98;
-				Match(T__10);
-				State = 99;
-				fieldExpr();
+				State = 106;
+				_la = TokenStream.LA(1);
+				if ( !(_la==T__11 || _la==WS) ) {
+				ErrorHandler.RecoverInline(this);
+				}
+				else {
+					ErrorHandler.ReportMatch(this);
+				    Consume();
+				}
+				State = 107;
+				field();
 				}
 				}
-				State = 104;
+				State = 112;
 				ErrorHandler.Sync(this);
 				_la = TokenStream.LA(1);
 			}
@@ -810,92 +906,56 @@ public partial class NqlParser : Parser {
 		return _localctx;
 	}
 
-	public partial class FieldExprContext : ParserRuleContext {
-		[System.Diagnostics.DebuggerNonUserCode] public FieldContext[] field() {
-			return GetRuleContexts<FieldContext>();
-		}
-		[System.Diagnostics.DebuggerNonUserCode] public FieldContext field(int i) {
-			return GetRuleContext<FieldContext>(i);
-		}
-		public FieldExprContext(ParserRuleContext parent, int invokingState)
-			: base(parent, invokingState)
-		{
-		}
-		public override int RuleIndex { get { return RULE_fieldExpr; } }
-		[System.Diagnostics.DebuggerNonUserCode]
-		public override void EnterRule(IParseTreeListener listener) {
-			INqlListener typedListener = listener as INqlListener;
-			if (typedListener != null) typedListener.EnterFieldExpr(this);
-		}
-		[System.Diagnostics.DebuggerNonUserCode]
-		public override void ExitRule(IParseTreeListener listener) {
-			INqlListener typedListener = listener as INqlListener;
-			if (typedListener != null) typedListener.ExitFieldExpr(this);
-		}
-		[System.Diagnostics.DebuggerNonUserCode]
-		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
-			INqlVisitor<TResult> typedVisitor = visitor as INqlVisitor<TResult>;
-			if (typedVisitor != null) return typedVisitor.VisitFieldExpr(this);
-			else return visitor.VisitChildren(this);
-		}
-	}
-
-	[RuleVersion(0)]
-	public FieldExprContext fieldExpr() {
-		FieldExprContext _localctx = new FieldExprContext(Context, State);
-		EnterRule(_localctx, 20, RULE_fieldExpr);
-		int _la;
-		try {
-			EnterOuterAlt(_localctx, 1);
-			{
-			State = 105;
-			field();
-			State = 108;
-			ErrorHandler.Sync(this);
-			_la = TokenStream.LA(1);
-			if (_la==T__11) {
-				{
-				State = 106;
-				Match(T__11);
-				State = 107;
-				field();
-				}
-			}
-
-			}
-		}
-		catch (RecognitionException re) {
-			_localctx.exception = re;
-			ErrorHandler.ReportError(this, re);
-			ErrorHandler.Recover(this, re);
-		}
-		finally {
-			ExitRule();
-		}
-		return _localctx;
-	}
-
 	public partial class FieldContext : ParserRuleContext {
-		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode NAME() { return GetToken(NqlParser.NAME, 0); }
 		public FieldContext(ParserRuleContext parent, int invokingState)
 			: base(parent, invokingState)
 		{
 		}
 		public override int RuleIndex { get { return RULE_field; } }
+	 
+		public FieldContext() { }
+		public virtual void CopyFrom(FieldContext context) {
+			base.CopyFrom(context);
+		}
+	}
+	public partial class TotalFieldContext : FieldContext {
+		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode AGGREGATE() { return GetToken(NqlParser.AGGREGATE, 0); }
+		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode NAME() { return GetToken(NqlParser.NAME, 0); }
+		public TotalFieldContext(FieldContext context) { CopyFrom(context); }
 		[System.Diagnostics.DebuggerNonUserCode]
 		public override void EnterRule(IParseTreeListener listener) {
 			INqlListener typedListener = listener as INqlListener;
-			if (typedListener != null) typedListener.EnterField(this);
+			if (typedListener != null) typedListener.EnterTotalField(this);
 		}
 		[System.Diagnostics.DebuggerNonUserCode]
 		public override void ExitRule(IParseTreeListener listener) {
 			INqlListener typedListener = listener as INqlListener;
-			if (typedListener != null) typedListener.ExitField(this);
+			if (typedListener != null) typedListener.ExitTotalField(this);
 		}
 		[System.Diagnostics.DebuggerNonUserCode]
 		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
 			INqlVisitor<TResult> typedVisitor = visitor as INqlVisitor<TResult>;
-			if (typedVisitor != null) return typedVisitor.VisitField(this);
+			if (typedVisitor != null) return typedVisitor.VisitTotalField(this);
+			else return visitor.VisitChildren(this);
+		}
+	}
+	public partial class NameFieldContext : FieldContext {
+		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode NAME() { return GetToken(NqlParser.NAME, 0); }
+		public NameFieldContext(FieldContext context) { CopyFrom(context); }
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override void EnterRule(IParseTreeListener listener) {
+			INqlListener typedListener = listener as INqlListener;
+			if (typedListener != null) typedListener.EnterNameField(this);
+		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override void ExitRule(IParseTreeListener listener) {
+			INqlListener typedListener = listener as INqlListener;
+			if (typedListener != null) typedListener.ExitNameField(this);
+		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			INqlVisitor<TResult> typedVisitor = visitor as INqlVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitNameField(this);
 			else return visitor.VisitChildren(this);
 		}
 	}
@@ -905,10 +965,29 @@ public partial class NqlParser : Parser {
 		FieldContext _localctx = new FieldContext(Context, State);
 		EnterRule(_localctx, 22, RULE_field);
 		try {
-			EnterOuterAlt(_localctx, 1);
-			{
-			State = 110;
-			Match(NAME);
+			State = 116;
+			ErrorHandler.Sync(this);
+			switch (TokenStream.LA(1)) {
+			case AGGREGATE:
+				_localctx = new TotalFieldContext(_localctx);
+				EnterOuterAlt(_localctx, 1);
+				{
+				State = 113;
+				Match(AGGREGATE);
+				State = 114;
+				Match(NAME);
+				}
+				break;
+			case NAME:
+				_localctx = new NameFieldContext(_localctx);
+				EnterOuterAlt(_localctx, 2);
+				{
+				State = 115;
+				Match(NAME);
+				}
+				break;
+			default:
+				throw new NoViableAltException(this);
 			}
 		}
 		catch (RecognitionException re) {
@@ -960,23 +1039,23 @@ public partial class NqlParser : Parser {
 		try {
 			EnterOuterAlt(_localctx, 1);
 			{
-			State = 112;
-			Match(T__12);
-			State = 113;
-			condition();
 			State = 118;
+			Match(T__12);
+			State = 119;
+			condition();
+			State = 124;
 			ErrorHandler.Sync(this);
 			_la = TokenStream.LA(1);
 			while (_la==T__13) {
 				{
 				{
-				State = 114;
+				State = 120;
 				Match(T__13);
-				State = 115;
+				State = 121;
 				condition();
 				}
 				}
-				State = 120;
+				State = 126;
 				ErrorHandler.Sync(this);
 				_la = TokenStream.LA(1);
 			}
@@ -1031,11 +1110,11 @@ public partial class NqlParser : Parser {
 		try {
 			EnterOuterAlt(_localctx, 1);
 			{
-			State = 121;
+			State = 127;
 			Match(NAME);
-			State = 122;
+			State = 128;
 			@operator();
-			State = 123;
+			State = 129;
 			value();
 			}
 		}
@@ -1082,7 +1161,7 @@ public partial class NqlParser : Parser {
 		try {
 			EnterOuterAlt(_localctx, 1);
 			{
-			State = 125;
+			State = 131;
 			_la = TokenStream.LA(1);
 			if ( !((((_la) & ~0x3f) == 0 && ((1L << _la) & 1015808L) != 0)) ) {
 			ErrorHandler.RecoverInline(this);
@@ -1107,6 +1186,7 @@ public partial class NqlParser : Parser {
 	public partial class ValueContext : ParserRuleContext {
 		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode NAME() { return GetToken(NqlParser.NAME, 0); }
 		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode NUMBER() { return GetToken(NqlParser.NUMBER, 0); }
+		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode STRING() { return GetToken(NqlParser.STRING, 0); }
 		public ValueContext(ParserRuleContext parent, int invokingState)
 			: base(parent, invokingState)
 		{
@@ -1138,9 +1218,9 @@ public partial class NqlParser : Parser {
 		try {
 			EnterOuterAlt(_localctx, 1);
 			{
-			State = 127;
+			State = 133;
 			_la = TokenStream.LA(1);
-			if ( !(_la==NAME || _la==NUMBER) ) {
+			if ( !((((_la) & ~0x3f) == 0 && ((1L << _la) & 11534336L) != 0)) ) {
 			ErrorHandler.RecoverInline(this);
 			}
 			else {
@@ -1161,44 +1241,47 @@ public partial class NqlParser : Parser {
 	}
 
 	private static int[] _serializedATN = {
-		4,1,22,130,2,0,7,0,2,1,7,1,2,2,7,2,2,3,7,3,2,4,7,4,2,5,7,5,2,6,7,6,2,7,
+		4,1,24,136,2,0,7,0,2,1,7,1,2,2,7,2,2,3,7,3,2,4,7,4,2,5,7,5,2,6,7,6,2,7,
 		7,7,2,8,7,8,2,9,7,9,2,10,7,10,2,11,7,11,2,12,7,12,2,13,7,13,2,14,7,14,
-		2,15,7,15,1,0,1,0,1,0,1,0,3,0,37,8,0,1,1,1,1,1,1,1,1,3,1,43,8,1,1,2,1,
-		2,1,2,1,2,3,2,49,8,2,1,3,1,3,1,3,1,4,1,4,1,4,3,4,57,8,4,1,4,3,4,60,8,4,
-		1,5,1,5,1,5,1,5,1,5,1,5,1,5,1,5,1,5,1,5,3,5,72,8,5,1,6,1,6,1,6,5,6,77,
-		8,6,10,6,12,6,80,9,6,1,7,1,7,1,7,5,7,85,8,7,10,7,12,7,88,9,7,1,8,1,8,1,
-		8,5,8,93,8,8,10,8,12,8,96,9,8,1,9,1,9,1,9,5,9,101,8,9,10,9,12,9,104,9,
-		9,1,10,1,10,1,10,3,10,109,8,10,1,11,1,11,1,12,1,12,1,12,1,12,5,12,117,
-		8,12,10,12,12,12,120,9,12,1,13,1,13,1,13,1,13,1,14,1,14,1,15,1,15,1,15,
-		0,0,16,0,2,4,6,8,10,12,14,16,18,20,22,24,26,28,30,0,3,1,0,4,5,1,0,15,19,
-		1,0,20,21,129,0,36,1,0,0,0,2,38,1,0,0,0,4,44,1,0,0,0,6,50,1,0,0,0,8,53,
-		1,0,0,0,10,71,1,0,0,0,12,73,1,0,0,0,14,81,1,0,0,0,16,89,1,0,0,0,18,97,
-		1,0,0,0,20,105,1,0,0,0,22,110,1,0,0,0,24,112,1,0,0,0,26,121,1,0,0,0,28,
-		125,1,0,0,0,30,127,1,0,0,0,32,37,3,2,1,0,33,37,3,4,2,0,34,37,3,6,3,0,35,
-		37,3,8,4,0,36,32,1,0,0,0,36,33,1,0,0,0,36,34,1,0,0,0,36,35,1,0,0,0,37,
-		1,1,0,0,0,38,39,5,1,0,0,39,40,5,20,0,0,40,42,5,2,0,0,41,43,3,24,12,0,42,
-		41,1,0,0,0,42,43,1,0,0,0,43,3,1,0,0,0,44,45,5,3,0,0,45,46,5,20,0,0,46,
-		48,7,0,0,0,47,49,3,24,12,0,48,47,1,0,0,0,48,49,1,0,0,0,49,5,1,0,0,0,50,
-		51,5,6,0,0,51,52,3,24,12,0,52,7,1,0,0,0,53,54,5,7,0,0,54,56,3,10,5,0,55,
-		57,3,18,9,0,56,55,1,0,0,0,56,57,1,0,0,0,57,59,1,0,0,0,58,60,3,24,12,0,
-		59,58,1,0,0,0,59,60,1,0,0,0,60,9,1,0,0,0,61,62,5,8,0,0,62,63,5,9,0,0,63,
-		72,3,12,6,0,64,65,5,10,0,0,65,66,5,9,0,0,66,72,3,14,7,0,67,68,5,6,0,0,
-		68,69,5,9,0,0,69,72,3,16,8,0,70,72,3,14,7,0,71,61,1,0,0,0,71,64,1,0,0,
-		0,71,67,1,0,0,0,71,70,1,0,0,0,72,11,1,0,0,0,73,78,5,20,0,0,74,75,5,11,
-		0,0,75,77,5,20,0,0,76,74,1,0,0,0,77,80,1,0,0,0,78,76,1,0,0,0,78,79,1,0,
-		0,0,79,13,1,0,0,0,80,78,1,0,0,0,81,86,5,20,0,0,82,83,5,11,0,0,83,85,5,
-		20,0,0,84,82,1,0,0,0,85,88,1,0,0,0,86,84,1,0,0,0,86,87,1,0,0,0,87,15,1,
-		0,0,0,88,86,1,0,0,0,89,94,5,20,0,0,90,91,5,11,0,0,91,93,5,20,0,0,92,90,
-		1,0,0,0,93,96,1,0,0,0,94,92,1,0,0,0,94,95,1,0,0,0,95,17,1,0,0,0,96,94,
-		1,0,0,0,97,102,3,20,10,0,98,99,5,11,0,0,99,101,3,20,10,0,100,98,1,0,0,
-		0,101,104,1,0,0,0,102,100,1,0,0,0,102,103,1,0,0,0,103,19,1,0,0,0,104,102,
-		1,0,0,0,105,108,3,22,11,0,106,107,5,12,0,0,107,109,3,22,11,0,108,106,1,
-		0,0,0,108,109,1,0,0,0,109,21,1,0,0,0,110,111,5,20,0,0,111,23,1,0,0,0,112,
-		113,5,13,0,0,113,118,3,26,13,0,114,115,5,14,0,0,115,117,3,26,13,0,116,
-		114,1,0,0,0,117,120,1,0,0,0,118,116,1,0,0,0,118,119,1,0,0,0,119,25,1,0,
-		0,0,120,118,1,0,0,0,121,122,5,20,0,0,122,123,3,28,14,0,123,124,3,30,15,
-		0,124,27,1,0,0,0,125,126,7,1,0,0,126,29,1,0,0,0,127,128,7,2,0,0,128,31,
-		1,0,0,0,12,36,42,48,56,59,71,78,86,94,102,108,118
+		2,15,7,15,1,0,1,0,1,0,1,0,1,0,3,0,38,8,0,1,1,1,1,1,1,1,1,3,1,44,8,1,1,
+		2,1,2,1,2,1,2,3,2,50,8,2,1,3,1,3,1,3,1,4,1,4,1,4,3,4,58,8,4,1,4,3,4,61,
+		8,4,1,5,1,5,3,5,65,8,5,1,5,3,5,68,8,5,1,6,1,6,1,6,1,6,1,6,1,6,1,6,1,6,
+		1,6,1,6,3,6,80,8,6,1,7,1,7,1,7,5,7,85,8,7,10,7,12,7,88,9,7,1,8,1,8,1,8,
+		5,8,93,8,8,10,8,12,8,96,9,8,1,9,1,9,1,9,5,9,101,8,9,10,9,12,9,104,9,9,
+		1,10,1,10,1,10,5,10,109,8,10,10,10,12,10,112,9,10,1,11,1,11,1,11,3,11,
+		117,8,11,1,12,1,12,1,12,1,12,5,12,123,8,12,10,12,12,12,126,9,12,1,13,1,
+		13,1,13,1,13,1,14,1,14,1,15,1,15,1,15,0,0,16,0,2,4,6,8,10,12,14,16,18,
+		20,22,24,26,28,30,0,4,1,0,4,5,2,0,12,12,22,22,1,0,15,19,2,0,20,21,23,23,
+		138,0,37,1,0,0,0,2,39,1,0,0,0,4,45,1,0,0,0,6,51,1,0,0,0,8,54,1,0,0,0,10,
+		62,1,0,0,0,12,79,1,0,0,0,14,81,1,0,0,0,16,89,1,0,0,0,18,97,1,0,0,0,20,
+		105,1,0,0,0,22,116,1,0,0,0,24,118,1,0,0,0,26,127,1,0,0,0,28,131,1,0,0,
+		0,30,133,1,0,0,0,32,38,3,2,1,0,33,38,3,4,2,0,34,38,3,6,3,0,35,38,3,8,4,
+		0,36,38,3,10,5,0,37,32,1,0,0,0,37,33,1,0,0,0,37,34,1,0,0,0,37,35,1,0,0,
+		0,37,36,1,0,0,0,38,1,1,0,0,0,39,40,5,1,0,0,40,41,5,20,0,0,41,43,5,2,0,
+		0,42,44,3,24,12,0,43,42,1,0,0,0,43,44,1,0,0,0,44,3,1,0,0,0,45,46,5,3,0,
+		0,46,47,5,20,0,0,47,49,7,0,0,0,48,50,3,24,12,0,49,48,1,0,0,0,49,50,1,0,
+		0,0,50,5,1,0,0,0,51,52,5,6,0,0,52,53,3,24,12,0,53,7,1,0,0,0,54,55,5,7,
+		0,0,55,57,3,12,6,0,56,58,3,20,10,0,57,56,1,0,0,0,57,58,1,0,0,0,58,60,1,
+		0,0,0,59,61,3,24,12,0,60,59,1,0,0,0,60,61,1,0,0,0,61,9,1,0,0,0,62,64,5,
+		8,0,0,63,65,3,20,10,0,64,63,1,0,0,0,64,65,1,0,0,0,65,67,1,0,0,0,66,68,
+		3,24,12,0,67,66,1,0,0,0,67,68,1,0,0,0,68,11,1,0,0,0,69,70,5,9,0,0,70,71,
+		5,10,0,0,71,80,3,14,7,0,72,73,5,11,0,0,73,74,5,10,0,0,74,80,3,16,8,0,75,
+		76,5,6,0,0,76,77,5,10,0,0,77,80,3,18,9,0,78,80,3,16,8,0,79,69,1,0,0,0,
+		79,72,1,0,0,0,79,75,1,0,0,0,79,78,1,0,0,0,80,13,1,0,0,0,81,86,5,20,0,0,
+		82,83,5,12,0,0,83,85,5,20,0,0,84,82,1,0,0,0,85,88,1,0,0,0,86,84,1,0,0,
+		0,86,87,1,0,0,0,87,15,1,0,0,0,88,86,1,0,0,0,89,94,5,20,0,0,90,91,5,12,
+		0,0,91,93,5,20,0,0,92,90,1,0,0,0,93,96,1,0,0,0,94,92,1,0,0,0,94,95,1,0,
+		0,0,95,17,1,0,0,0,96,94,1,0,0,0,97,102,5,20,0,0,98,99,5,12,0,0,99,101,
+		5,20,0,0,100,98,1,0,0,0,101,104,1,0,0,0,102,100,1,0,0,0,102,103,1,0,0,
+		0,103,19,1,0,0,0,104,102,1,0,0,0,105,110,3,22,11,0,106,107,7,1,0,0,107,
+		109,3,22,11,0,108,106,1,0,0,0,109,112,1,0,0,0,110,108,1,0,0,0,110,111,
+		1,0,0,0,111,21,1,0,0,0,112,110,1,0,0,0,113,114,5,24,0,0,114,117,5,20,0,
+		0,115,117,5,20,0,0,116,113,1,0,0,0,116,115,1,0,0,0,117,23,1,0,0,0,118,
+		119,5,13,0,0,119,124,3,26,13,0,120,121,5,14,0,0,121,123,3,26,13,0,122,
+		120,1,0,0,0,123,126,1,0,0,0,124,122,1,0,0,0,124,125,1,0,0,0,125,25,1,0,
+		0,0,126,124,1,0,0,0,127,128,5,20,0,0,128,129,3,28,14,0,129,130,3,30,15,
+		0,130,27,1,0,0,0,131,132,7,2,0,0,132,29,1,0,0,0,133,134,7,3,0,0,134,31,
+		1,0,0,0,14,37,43,49,57,60,64,67,79,86,94,102,110,116,124
 	};
 
 	public static readonly ATN _ATN =

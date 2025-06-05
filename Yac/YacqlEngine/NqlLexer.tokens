@@ -20,6 +20,8 @@ T__18=19
 NAME=20
 NUMBER=21
 WS=22
+STRING=23
+AGGREGATE=24
 'player:'=1
 'stats'=2
 'team:'=3
@@ -27,11 +29,11 @@ WS=22
 'record'=5
 'games'=6
 'compare'=7
-'players'=8
-':'=9
-'teams'=10
-','=11
-'/'=12
+'seasons'=8
+'players'=9
+':'=10
+'teams'=11
+','=12
 'where'=13
 'and'=14
 '='=15
@@ -39,3 +41,4 @@ WS=22
 '<'=17
 '>='=18
 '<='=19
+'total'=24

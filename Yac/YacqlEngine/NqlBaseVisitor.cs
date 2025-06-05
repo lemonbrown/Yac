@@ -85,6 +85,16 @@ public partial class NqlBaseVisitor<Result> : AbstractParseTreeVisitor<Result>, 
 	/// <return>The visitor result.</return>
 	public virtual Result VisitCompareQuery([NotNull] NqlParser.CompareQueryContext context) { return VisitChildren(context); }
 	/// <summary>
+	/// Visit a parse tree produced by <see cref="NqlParser.seasonQuery"/>.
+	/// <para>
+	/// The default implementation returns the result of calling <see cref="AbstractParseTreeVisitor{Result}.VisitChildren(IRuleNode)"/>
+	/// on <paramref name="context"/>.
+	/// </para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	public virtual Result VisitSeasonQuery([NotNull] NqlParser.SeasonQueryContext context) { return VisitChildren(context); }
+	/// <summary>
 	/// Visit a parse tree produced by <see cref="NqlParser.compareTarget"/>.
 	/// <para>
 	/// The default implementation returns the result of calling <see cref="AbstractParseTreeVisitor{Result}.VisitChildren(IRuleNode)"/>
@@ -135,7 +145,8 @@ public partial class NqlBaseVisitor<Result> : AbstractParseTreeVisitor<Result>, 
 	/// <return>The visitor result.</return>
 	public virtual Result VisitFieldSelection([NotNull] NqlParser.FieldSelectionContext context) { return VisitChildren(context); }
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="NqlParser.fieldExpr"/>.
+	/// Visit a parse tree produced by the <c>totalField</c>
+	/// labeled alternative in <see cref="NqlParser.field"/>.
 	/// <para>
 	/// The default implementation returns the result of calling <see cref="AbstractParseTreeVisitor{Result}.VisitChildren(IRuleNode)"/>
 	/// on <paramref name="context"/>.
@@ -143,9 +154,10 @@ public partial class NqlBaseVisitor<Result> : AbstractParseTreeVisitor<Result>, 
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	public virtual Result VisitFieldExpr([NotNull] NqlParser.FieldExprContext context) { return VisitChildren(context); }
+	public virtual Result VisitTotalField([NotNull] NqlParser.TotalFieldContext context) { return VisitChildren(context); }
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="NqlParser.field"/>.
+	/// Visit a parse tree produced by the <c>nameField</c>
+	/// labeled alternative in <see cref="NqlParser.field"/>.
 	/// <para>
 	/// The default implementation returns the result of calling <see cref="AbstractParseTreeVisitor{Result}.VisitChildren(IRuleNode)"/>
 	/// on <paramref name="context"/>.
@@ -153,7 +165,7 @@ public partial class NqlBaseVisitor<Result> : AbstractParseTreeVisitor<Result>, 
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	public virtual Result VisitField([NotNull] NqlParser.FieldContext context) { return VisitChildren(context); }
+	public virtual Result VisitNameField([NotNull] NqlParser.NameFieldContext context) { return VisitChildren(context); }
 	/// <summary>
 	/// Visit a parse tree produced by <see cref="NqlParser.whereClause"/>.
 	/// <para>

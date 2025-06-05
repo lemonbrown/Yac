@@ -115,6 +115,9 @@ namespace DataScraper
 
                 var teamUrl = row.SelectSingleNode("th/a")?.Attributes.FirstOrDefault()?.Value;
 
+                if (teamUrl == null)
+                    continue;
+
                 var turl = $"https://www.pro-football-reference.com{teamUrl}";
 
 

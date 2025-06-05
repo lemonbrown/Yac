@@ -18,6 +18,8 @@ namespace YacData.Models
 
         public int Divison { get; set; }
 
+        public List<TeamSeason> Seasons { get; set; } = [];
+
         public DateTime ActiveStartDateTime { get; set; }
 
         public DateTime ActiveEndDateTime { get; set; }

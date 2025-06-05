@@ -26,7 +26,7 @@ namespace YacData.Models {
 
         public int Ties { get; set; }
 
-        public string Division { get; set; }
+        public string Division { get; set; } = "";
 
         public int DivisonRank { get; set; }
 
@@ -37,5 +37,7 @@ namespace YacData.Models {
         public string DefensiveCoordinator { get; set; } = "";
 
         public string Stadium { get; set; } = "";
+
+        public List<TeamSeasonRosterPlayer> RosterPlayers { get; set; } = [];
     }
 }

@@ -1,7 +1,6 @@
 ﻿// See https://aka.ms/new-console-template for more information
 using DataScraper;
 using DataScraper.Helpers;
-using NFLScraper;
 using YacData;
 using YacData.Models;
 
@@ -17,30 +16,28 @@ TeamSeasonScraper teamSeasonScraper = new TeamSeasonScraper(httpHelper);
 
 //await pfrScraper.GetPlayersAlphabetically("A");
 
-var teams = await pfrScraper.GetTeams();
+var pfrTeams = await pfrScraper.GetTeams();
 
-var teamsAndSeasons = new Dictionary<Team, List<TeamSeason>>();
+var teams = new List<Team>();
 
 var seasonRosterScraper = new RosterScraper(httpHelper);
 
-foreach (var team in teams) {
+foreach (var pfrTeam in pfrTeams) {
 
-    if (String.IsNullOrEmpty(team.Url))
+    if (String.IsNullOrEmpty(pfrTeam.Url))
         continue;
 
-    var seasons = await teamSeasonScraper.ScrapeTeamRecords(team.Url);
+    var seasons = await teamSeasonScraper.ScrapeTeamRecords(pfrTeam.Url);
 
     seasons = seasons.Where(n => n.Year > 2000).ToList();
 
-    var teamSeasons = new List<TeamSeason>();
-
     foreach (var season in seasons) {
 
-        var summary = await teamSeasonScraper.ScrapeTeamSummary(team.Url + season.Year + ".htm");
+        var summary = await teamSeasonScraper.ScrapeTeamSummary(pfrTeam.Url + season.Year + ".htm");
 
         var teamSeason = new TeamSeason() {
-            TeamId = team.Team.Id,
-            TeamName = team.Team.Name,
+            TeamId = pfrTeam.Team.Id,
+            TeamName = pfrTeam.Team.Name,
             Conference = summary.Conference,
             DefensiveCoordinator = summary.DefensiveCoordinator,
             OffensiveCoordinator = summary.OffensiveCoordinator,
@@ -57,17 +54,17 @@ foreach (var team in teams) {
             Wins = summary.Wins,
             Ties = summary.Ties,
             Stadium = summary.Stadium,
-            Year = season.Year            
+            Year = season.Year
         };
 
-        var seasonRosterUrl = team.Url + season.Year + "_roster.htm";
+        var seasonRosterUrl = pfrTeam.Url + season.Year + "_roster.htm";
 
         var seasonRoster = await seasonRosterScraper.ScrapeRosterFromHtml(seasonRosterUrl);
 
         foreach (var rosterPlayer in seasonRoster) {
 
             var teamSeasonRosterPlayer = new TeamSeasonRosterPlayer() {
-                TeamName = team.Team.Name,
+                TeamName = pfrTeam.Team.Name,
                 TeamSeasonId = teamSeason.Id,
                 Number = rosterPlayer.Number,
                 Age = rosterPlayer.Age,
@@ -80,12 +77,20 @@ foreach (var team in teams) {
                 Weight = rosterPlayer.Weight,
             };
 
+            teamSeason.RosterPlayers.Add(teamSeasonRosterPlayer);
         }
 
-        teamSeasons.Add(teamSeason);
+        pfrTeam.Team.Seasons.Add(teamSeason);
     }
 
-    teamsAndSeasons.Add(team.Team, teamSeasons);
+    if (pfrTeam.Team != null)
+        teams.Add(pfrTeam.Team);
+}
+
+foreach (var team in teams) {
+
+    yacDataService.InsertTeam(team);
+
 }
 
 //var weeklyGameUrls = await pfrScraper.GeetWeeklyGameUrls(1, 2000);

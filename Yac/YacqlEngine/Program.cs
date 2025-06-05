@@ -40,7 +40,7 @@ while (true)
     if (string.IsNullOrWhiteSpace(input) || input.ToLower() == "exit")
         break;
 
-    var result = NqlEngine.Run(input, players, schedules, records, games);
+    //var result = NqlEngine.Run(input, players, schedules, records, games);
 }
 
 public record PlayerStats(string Name, int Season, int PassingYards, int Touchdowns, int Interceptions);

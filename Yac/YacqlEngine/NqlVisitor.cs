@@ -62,6 +62,12 @@ public interface INqlVisitor<Result> : IParseTreeVisitor<Result> {
 	/// <return>The visitor result.</return>
 	Result VisitCompareQuery([NotNull] NqlParser.CompareQueryContext context);
 	/// <summary>
+	/// Visit a parse tree produced by <see cref="NqlParser.seasonQuery"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitSeasonQuery([NotNull] NqlParser.SeasonQueryContext context);
+	/// <summary>
 	/// Visit a parse tree produced by <see cref="NqlParser.compareTarget"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
@@ -92,17 +98,19 @@ public interface INqlVisitor<Result> : IParseTreeVisitor<Result> {
 	/// <return>The visitor result.</return>
 	Result VisitFieldSelection([NotNull] NqlParser.FieldSelectionContext context);
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="NqlParser.fieldExpr"/>.
+	/// Visit a parse tree produced by the <c>totalField</c>
+	/// labeled alternative in <see cref="NqlParser.field"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	Result VisitFieldExpr([NotNull] NqlParser.FieldExprContext context);
+	Result VisitTotalField([NotNull] NqlParser.TotalFieldContext context);
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="NqlParser.field"/>.
+	/// Visit a parse tree produced by the <c>nameField</c>
+	/// labeled alternative in <see cref="NqlParser.field"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	Result VisitField([NotNull] NqlParser.FieldContext context);
+	Result VisitNameField([NotNull] NqlParser.NameFieldContext context);
 	/// <summary>
 	/// Visit a parse tree produced by <see cref="NqlParser.whereClause"/>.
 	/// </summary>

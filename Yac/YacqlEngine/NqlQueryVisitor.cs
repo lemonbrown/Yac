@@ -1,27 +1,26 @@
 ﻿using Antlr4.Runtime;
+using Antlr4.Runtime.Misc;
+using LiteDB;
 using System;
 using System.Collections.Generic;
 using System.Dynamic;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
+using YacData.Models;
 
 namespace YacqlEngine {
     public class NqlQueryVisitor : NqlBaseVisitor<object> {
+
         private readonly List<PlayerStats> _players;
         private readonly List<TeamSchedule> _schedules;
         private readonly List<TeamRecord> _records;
         private readonly List<Game> _games;
 
-        public NqlQueryVisitor(
-            List<PlayerStats> players,
-            List<TeamSchedule> schedules,
-            List<TeamRecord> records,
-            List<Game> games) {
-            _players = players;
-            _schedules = schedules;
-            _records = records;
-            _games = games;
+        private readonly LiteDatabase _db;
+
+        public NqlQueryVisitor() {
         }
 
         public override object VisitPlayerQuery(NqlParser.PlayerQueryContext context) {
@@ -65,21 +64,24 @@ namespace YacqlEngine {
             };
         }
 
-        private List<string> ExtractFields(NqlParser.FieldSelectionContext context) {
-            var fields = new List<string>();
+        private List<QueryField> ExtractFields(NqlParser.FieldSelectionContext context) {
+
+            var fields = new List<QueryField>();
 
             if (context == null)
                 return fields;
 
-            foreach (var expr in context.fieldExpr()) {
-                var allFields = expr.field();
-
-                if (allFields.Count() == 2) {
-                    var left = allFields[0].GetText().Trim();
-                    var right = allFields[1].GetText().Trim();
-                    fields.Add($"{left}/{right}"); // handle computed fields like td/int
-                } else if (allFields.Count() == 1) {
-                    fields.Add(allFields[0].GetText().Trim());
+            foreach (var fieldCtx in context.children.OfType<NqlParser.FieldContext>()) {
+                if (fieldCtx is NqlParser.TotalFieldContext totalField) {
+                    fields.Add(new QueryField {
+                        Field = totalField.NAME().GetText(),
+                        Aggregation = "total"
+                    });
+                } else if (fieldCtx is NqlParser.NameFieldContext nameField) {
+                    fields.Add(new QueryField {
+                        Field = nameField.NAME().GetText(),
+                        Aggregation = null
+                    });
                 }
             }
 
@@ -96,6 +98,11 @@ namespace YacqlEngine {
                 var field = cond.NAME().GetText().Trim();
                 var op = cond.@operator().GetText().Trim();
                 var val = cond.value().GetText().Trim();
+
+                // Handle quoted string removal
+                if (val.StartsWith("'") && val.EndsWith("'")) {
+                    val = val.Substring(1, val.Length - 2); // Strip the single quotes
+                }
 
                 conditions.Add(new QueryCondition {
                     Field = field,
@@ -165,12 +172,12 @@ namespace YacqlEngine {
 
             var compareResults = new object();
 
-            if (context.compareTarget().playerList() is not null) {
-                var players = ExtractNames(context.compareTarget().playerList());
-                var playerResult = ComparePlayers(players, fields, filters, _players);
+            //if (context.compareTarget().playerList() is not null) {
+            //    var players = ExtractNames(context.compareTarget().playerList());
+            //    var playerResult = ComparePlayers(players, fields, filters, _players);
 
-                compareResults = playerResult;
-            }
+            //    compareResults = playerResult;
+            //}
             //else if (context.compareTarget().teamList() is not null) {
             //    var teams = ExtractNames(context.compareTarget().teamList());
             //    CompareTeams(teams, fields, filters);
@@ -415,7 +422,7 @@ namespace YacqlEngine {
 
                             statResults["touchdowns"] = touchdowns;
                             statResults["interceptions"] = interceptions;
-                            statResults["yards"] = yards; 
+                            statResults["yards"] = yards;
 
                         } else {
 
@@ -468,6 +475,68 @@ namespace YacqlEngine {
             }
 
             return null;
+        }
+
+        public override object VisitSeasonQuery([NotNull] NqlParser.SeasonQueryContext context) {
+
+            using LiteDatabase db = new LiteDatabase("C:\\Users\\cameron\\source\\repos\\Yac\\Yac\\DataScraper\\bin\\Debug\\net8.0\\yac.db");
+            
+            var fields = ExtractFields(context.fieldSelection());
+
+            var filters = ExtractConditions(context.whereClause());
+
+
+            // Assume collection is already opened, e.g.
+            var teams = db.GetCollection<Team>("teams").FindAll().ToList();
+
+            var flatSeasons = new List<(string TeamName, TeamSeason Season)>();
+
+            foreach (var team in teams) {
+                foreach (var season in team.Seasons) {
+                    flatSeasons.Add((team.Name, season));
+                }
+            }
+
+
+            var filteredSeasons = flatSeasons
+             .Where(entry => {
+                 var season = entry.Season;
+                 foreach (var f in filters) {
+                     var prop = typeof(TeamSeason).GetProperty(f.Field, BindingFlags.IgnoreCase | BindingFlags.Public | BindingFlags.Instance);
+                     if (prop == null)
+                         return false;
+
+                     var val = prop.GetValue(season)?.ToString()?.ToLower();
+                     var filterVal = f.Value.ToLower();
+
+                     return f.Operator switch {
+                         "=" => val == filterVal,
+                         ">" => double.TryParse(val, out var v1) && double.TryParse(f.Value, out var v2) && v1 > v2,
+                         "<" => double.TryParse(val, out var v3) && double.TryParse(f.Value, out var v4) && v3 < v4,
+                         _ => false
+                     };
+                 }
+                 return true;
+             }).ToList();
+
+            var projected = filteredSeasons.Select(entry =>
+            {
+                var obj = new Dictionary<string, object?>
+                {
+                    { "team", entry.TeamName }
+                };
+
+                foreach (var field in fields) {
+                    var prop = typeof(TeamSeason).GetProperty(field.Field, BindingFlags.IgnoreCase | BindingFlags.Public | BindingFlags.Instance);
+                    if (prop != null)
+                        obj[field.Field] = prop.GetValue(entry.Season);
+                }
+
+                return obj;
+            }).ToList();
+
+
+            return projected;
         }
 
         public override object VisitGameQuery(NqlParser.GameQueryContext context) {
@@ -560,5 +629,10 @@ namespace YacqlEngine {
                 .ToList() ?? new List<string>();
         }
 
+    }
+
+    public class QueryField {
+        public string Field { get; set; }
+        public string Aggregation { get; set; }  // e.g., "total", "avg", null
     }
 }
