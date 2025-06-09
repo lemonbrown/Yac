@@ -10,7 +10,7 @@ using YacData.Models;
 namespace DataScraper
 {
 
-    class PfrScraper(YacDataService yacDataService, HttpHelper httpHelper)
+    class PfrScraper(HttpHelper httpHelper)
     {
 
         public async Task GetPlayersAlphabetically(string letter, int year = 2000)

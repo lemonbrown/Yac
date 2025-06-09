@@ -84,18 +84,6 @@ public partial class NqlBaseListener : INqlListener {
 	/// <param name="context">The parse tree.</param>
 	public virtual void ExitGameQuery([NotNull] NqlParser.GameQueryContext context) { }
 	/// <summary>
-	/// Enter a parse tree produced by <see cref="NqlParser.compareQuery"/>.
-	/// <para>The default implementation does nothing.</para>
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	public virtual void EnterCompareQuery([NotNull] NqlParser.CompareQueryContext context) { }
-	/// <summary>
-	/// Exit a parse tree produced by <see cref="NqlParser.compareQuery"/>.
-	/// <para>The default implementation does nothing.</para>
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	public virtual void ExitCompareQuery([NotNull] NqlParser.CompareQueryContext context) { }
-	/// <summary>
 	/// Enter a parse tree produced by <see cref="NqlParser.seasonQuery"/>.
 	/// <para>The default implementation does nothing.</para>
 	/// </summary>
@@ -107,18 +95,6 @@ public partial class NqlBaseListener : INqlListener {
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	public virtual void ExitSeasonQuery([NotNull] NqlParser.SeasonQueryContext context) { }
-	/// <summary>
-	/// Enter a parse tree produced by <see cref="NqlParser.compareTarget"/>.
-	/// <para>The default implementation does nothing.</para>
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	public virtual void EnterCompareTarget([NotNull] NqlParser.CompareTargetContext context) { }
-	/// <summary>
-	/// Exit a parse tree produced by <see cref="NqlParser.compareTarget"/>.
-	/// <para>The default implementation does nothing.</para>
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	public virtual void ExitCompareTarget([NotNull] NqlParser.CompareTargetContext context) { }
 	/// <summary>
 	/// Enter a parse tree produced by <see cref="NqlParser.playerList"/>.
 	/// <para>The default implementation does nothing.</para>
@@ -168,19 +144,19 @@ public partial class NqlBaseListener : INqlListener {
 	/// <param name="context">The parse tree.</param>
 	public virtual void ExitFieldSelection([NotNull] NqlParser.FieldSelectionContext context) { }
 	/// <summary>
-	/// Enter a parse tree produced by the <c>totalField</c>
+	/// Enter a parse tree produced by the <c>aggregateField</c>
 	/// labeled alternative in <see cref="NqlParser.field"/>.
 	/// <para>The default implementation does nothing.</para>
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
-	public virtual void EnterTotalField([NotNull] NqlParser.TotalFieldContext context) { }
+	public virtual void EnterAggregateField([NotNull] NqlParser.AggregateFieldContext context) { }
 	/// <summary>
-	/// Exit a parse tree produced by the <c>totalField</c>
+	/// Exit a parse tree produced by the <c>aggregateField</c>
 	/// labeled alternative in <see cref="NqlParser.field"/>.
 	/// <para>The default implementation does nothing.</para>
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
-	public virtual void ExitTotalField([NotNull] NqlParser.TotalFieldContext context) { }
+	public virtual void ExitAggregateField([NotNull] NqlParser.AggregateFieldContext context) { }
 	/// <summary>
 	/// Enter a parse tree produced by the <c>nameField</c>
 	/// labeled alternative in <see cref="NqlParser.field"/>.

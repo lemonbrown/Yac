@@ -71,16 +71,6 @@ public interface INqlListener : IParseTreeListener {
 	/// <param name="context">The parse tree.</param>
 	void ExitGameQuery([NotNull] NqlParser.GameQueryContext context);
 	/// <summary>
-	/// Enter a parse tree produced by <see cref="NqlParser.compareQuery"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	void EnterCompareQuery([NotNull] NqlParser.CompareQueryContext context);
-	/// <summary>
-	/// Exit a parse tree produced by <see cref="NqlParser.compareQuery"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	void ExitCompareQuery([NotNull] NqlParser.CompareQueryContext context);
-	/// <summary>
 	/// Enter a parse tree produced by <see cref="NqlParser.seasonQuery"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
@@ -90,16 +80,6 @@ public interface INqlListener : IParseTreeListener {
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	void ExitSeasonQuery([NotNull] NqlParser.SeasonQueryContext context);
-	/// <summary>
-	/// Enter a parse tree produced by <see cref="NqlParser.compareTarget"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	void EnterCompareTarget([NotNull] NqlParser.CompareTargetContext context);
-	/// <summary>
-	/// Exit a parse tree produced by <see cref="NqlParser.compareTarget"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	void ExitCompareTarget([NotNull] NqlParser.CompareTargetContext context);
 	/// <summary>
 	/// Enter a parse tree produced by <see cref="NqlParser.playerList"/>.
 	/// </summary>
@@ -141,17 +121,17 @@ public interface INqlListener : IParseTreeListener {
 	/// <param name="context">The parse tree.</param>
 	void ExitFieldSelection([NotNull] NqlParser.FieldSelectionContext context);
 	/// <summary>
-	/// Enter a parse tree produced by the <c>totalField</c>
+	/// Enter a parse tree produced by the <c>aggregateField</c>
 	/// labeled alternative in <see cref="NqlParser.field"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
-	void EnterTotalField([NotNull] NqlParser.TotalFieldContext context);
+	void EnterAggregateField([NotNull] NqlParser.AggregateFieldContext context);
 	/// <summary>
-	/// Exit a parse tree produced by the <c>totalField</c>
+	/// Exit a parse tree produced by the <c>aggregateField</c>
 	/// labeled alternative in <see cref="NqlParser.field"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
-	void ExitTotalField([NotNull] NqlParser.TotalFieldContext context);
+	void ExitAggregateField([NotNull] NqlParser.AggregateFieldContext context);
 	/// <summary>
 	/// Enter a parse tree produced by the <c>nameField</c>
 	/// labeled alternative in <see cref="NqlParser.field"/>.

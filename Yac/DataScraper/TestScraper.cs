@@ -144,6 +144,14 @@ namespace NFLScraper {
                 // Extract team stats
                 var stats = ExtractTeamStats(doc);
 
+                gameData.HomeTeamStats = new() {
+                    Passing = stats.Passing.Where(n => NFLTeamConverter.GetTeamAbbreviation(n.Team) == NFLTeamConverter.GetTeamAbbreviation(gameData.HomeTeam)).ToList()
+                };
+
+                gameData.AwayTeamStats = new() {
+                    Passing = stats.Passing.Where(n => NFLTeamConverter.GetTeamAbbreviation(n.Team) == NFLTeamConverter.GetTeamAbbreviation(gameData.AwayTeam)).ToList()
+                };
+
                 // Extract drives
                 gameData.HomeTeamDrives = ExtractDrives(doc, true);
                 gameData.AwayTeamDrives = ExtractDrives(doc, false);

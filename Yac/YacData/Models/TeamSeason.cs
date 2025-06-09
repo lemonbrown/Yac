@@ -28,7 +28,7 @@ namespace YacData.Models {
 
         public string Division { get; set; } = "";
 
-        public int DivisonRank { get; set; }
+        public int DivisionRank { get; set; }
 
         public string Conference { get; set; } = "";
 

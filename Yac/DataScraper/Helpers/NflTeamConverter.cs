@@ -203,7 +203,15 @@ namespace DataScraper.Helpers {
             if (teamName.Contains("Seattle"))
                 return "SEA";
 
-            return string.Empty; // Return empty string if no match found
+            return ExtractFromUniqueAbbrevation(teamName); // Return empty string if no match found
+        }
+
+        private static string ExtractFromUniqueAbbrevation(string abbv) {
+
+            if (abbv == "KAN")
+                return "KC";
+
+            return abbv;
         }
     }
 }
