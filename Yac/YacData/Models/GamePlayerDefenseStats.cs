@@ -8,9 +8,13 @@ namespace YacData.Models
 {
     public class GamePlayerDefenseStats
     {
-        public int PlayerId { get; set; }
-        public int TeamId { get; set; }
-        public int GameId { get; set; }
+        public string PlayerName { get; set; } = "";
+
+        public string TeamName { get; set; } = "";
+
+        public string PlayerId { get; set; } = "";
+        public string TeamId { get; set; } = "";
+        public string GameId { get; set; } = "";
 
         // Coverage Stats
         public int Interceptions { get; set; }            // Int

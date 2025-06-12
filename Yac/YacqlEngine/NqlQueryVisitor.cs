@@ -1,4 +1,4 @@
-﻿using Antlr4.Runtime;
+﻿
 using Antlr4.Runtime.Misc;
 using LiteDB;
 using System;
@@ -25,6 +25,16 @@ namespace YacqlEngine {
             var filters = FilterConditionExtractor.ExtractConditions(context.whereClause());
 
             using var handler = new SeasonQueryHandler();
+
+            return handler.ExecuteQuery(fields, filters);
+        }
+
+        public override object VisitGameQuery([NotNull] NqlParser.GameQueryContext context) {
+
+            var fields = FieldSelectionExtractor.ExtractFields(context.fieldSelection());
+            var filters = FilterConditionExtractor.ExtractConditions(context.whereClause());
+
+            using var handler = new GameQueryHandler();
 
             return handler.ExecuteQuery(fields, filters);
         }

@@ -8,10 +8,12 @@ namespace YacData.Models
 {
     public class GamePlayerReceivingStats
     {
-        public int Id { get; set; }
-        public int PlayerId { get; set; }       // Link to Player
-        public int TeamId { get; set; }         // Link to Team (Tm)
-        public int GameId { get; set; }         // Optional: if stats are per game
+        public string PlayerName { get; set; } = "";
+        public string TeamName { get; set; } = "";
+        public string Id { get; set; }
+        public string PlayerId { get; set; }       // Link to Player
+        public string TeamId { get; set; }         // Link to Team (Tm)
+        public string GameId { get; set; }         // Optional: if stats are per game
 
         public int Targets { get; set; }        // Tgt
         public int Receptions { get; set; }     // Rec

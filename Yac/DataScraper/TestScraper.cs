@@ -42,6 +42,37 @@ namespace NFLScraper {
         public int Touchdowns { get; set; }
         public int Interceptions { get; set; }
         public double Rating { get; set; }
+        public int FirstDowns { get; set; }      // 1D
+        public double FirstDownRate { get; set; } // 1D%
+
+        // Air Yards & Accuracy
+        public double IntendedAirYards { get; set; }           // IAY
+        public double IntendedAirYardsPerAttempt { get; set; } // IAY/PA
+
+        public double CompletedAirYards { get; set; }          // CAY
+        public double CompletedAirYardsPerCompletion { get; set; } // CAY/Cmp
+        public double CompletedAirYardsPerAttempt { get; set; }    // CAY/PA
+
+        public int YardsAfterCatch { get; set; }               // YAC
+        public double YardsAfterCatchPerCompletion { get; set; }   // YAC/Cmp
+
+        // Accuracy & Drops
+        public int Drops { get; set; }               // Drops
+        public double DropRate { get; set; }         // Drop%
+        public int BadThrows { get; set; }           // BadTh
+        public double BadThrowRate { get; set; }     // Bad%
+
+        // Pass Protection / Pressure
+        public int Sacks { get; set; }               // Sk
+        public int BlitzesFaced { get; set; }        // Bltz
+        public int Hurries { get; set; }             // Hrry
+        public int QBHits { get; set; }              // Hits
+        public int Pressures { get; set; }           // Prss
+        public double PressureRate { get; set; }     // Prss%
+
+        // Scrambles
+        public int Scrambles { get; set; }           // Scrm
+        public double YardsPerScramble { get; set; } // Yds/Scr
     }
 
     public class RushingStats {
@@ -53,6 +84,15 @@ namespace NFLScraper {
         public int Long { get; set; }
         public string Team { get; internal set; }
         public int Fumbles { get; set; }
+        public int FirstDowns { get; set; }                // 1D
+        public double YardsBeforeContact { get; set; }        // YBC
+        public double YardsBeforeContactPerAttempt { get; set; } // YBC/Att
+
+        public double YardsAfterContact { get; set; }         // YAC
+        public double YardsAfterContactPerAttempt { get; set; }  // YAC/Att
+
+        public int BrokenTackles { get; set; }             // BrkTkl
+        public double AttemptsPerBrokenTackle { get; set; } // Att/Br
     }
 
     public class ReceivingStats {
@@ -66,6 +106,25 @@ namespace NFLScraper {
         public string Team { get; internal set; }
 
         public int Fumbles { get; set; }
+
+        public int FirstDowns { get; set; }     // 1D
+
+        public int YardsBeforeCatch { get; set; }     // YBC
+        public double YardsBeforeCatchPerReception { get; set; } // YBC/R
+
+        public int YardsAfterCatch { get; set; }      // YAC
+        public double YardsAfterCatchPerReception { get; set; }  // YAC/R
+
+        public double AverageDepthOfTarget { get; set; }   // ADOT
+
+        public int BrokenTackles { get; set; }       // BrkTkl
+        public double ReceptionsPerBrokenTackle { get; set; } // Rec/Br
+
+        public int Drops { get; set; }               // Drop
+        public double DropRate { get; set; }         // Drop%
+
+        public int Interceptions { get; set; }       // Int (on targets to this player)
+        public double QBPasserRatingWhenTargeted { get; set; } // Rat
     }
 
     public class DefenseStats {
@@ -78,6 +137,38 @@ namespace NFLScraper {
         public int ForcedFumbles { get; set; }
         public int FumbleRecoveries { get; set; }
         public string Team { get; internal set; }
+        public int InterceptionYards { get; internal set; }
+        public int InterceptionTouchdowns { get; internal set; }
+        public int CombinedTackles { get; internal set; }
+        public int SoloTackles { get; internal set; }
+        public int TacklesForLoss { get; internal set; }
+        public int QuarterbackHits { get; internal set; }
+        public int FumblesRecoveredYards { get; internal set; }
+        public int FumblesRecovered { get; internal set; }
+        public int FumbleRecoveredTouchdowns { get; internal set; }
+
+        public int Targets { get; set; }                  // Tgt
+        public int CompletionsAllowed { get; set; }       // Cmp
+        public double CompletionPercentageAllowed { get; set; } // Cmp%
+        public int YardsAllowed { get; set; }             // Yds
+        public double YardsPerCompletionAllowed { get; set; }   // Yds/Cmp
+        public double YardsPerTargetAllowed { get; set; }       // Yds/Tgt
+        public int TouchdownsAllowed { get; set; }        // TD
+        public double PasserRatingAllowed { get; set; }   // Rat
+
+        public double DADOT { get; set; }                 // DADOT = Depth of Average Depth of Target
+        public int AirYardsAllowed { get; set; }          // Air
+        public int YardsAfterCatchAllowed { get; set; }   // YAC
+
+        // Pressure Stats
+        public int Blitzes { get; set; }                  // Bltz
+        public int Hurries { get; set; }                  // Hrry
+        public int QBKnockdowns { get; set; }             // QBKD
+        public int Pressures { get; set; }                // Prss
+
+        // Tackling Stats
+        public int MissedTackles { get; set; }            // MTkl
+        public double MissedTackleRate { get; set; }      // MTkl%
     }
 
     public class ReturnStats {
@@ -87,15 +178,22 @@ namespace NFLScraper {
         public double Average { get; set; }
         public int Long { get; set; }
         public int Touchdowns { get; set; }
+        public double YardsPerReturn { get; set; }
         public string Team { get; internal set; }
     }
 
     public class KickingStats {
         public string Player { get; set; }
-        public string FieldGoals { get; set; } // "Made/Attempted"
-        public string ExtraPoints { get; set; } // "Made/Attempted"
+        public int FieldGoals { get; set; } // "Made/Attempted"
+        public int ExtraPoints { get; set; } // "Made/Attempted"
         public int Points { get; set; }
         public string Team { get; internal set; }
+        public int ExtraPointsAttempted { get; internal set; }
+        public int FieldGoalsAttempted { get; internal set; }
+        public int Punts { get; internal set; }
+        public int TotalPuntYards { get; internal set; }
+        public double YardsPerPunt { get; internal set; }
+        public int LongestPunt { get; internal set; }
     }
 
     public class PuntingStats {
@@ -145,11 +243,27 @@ namespace NFLScraper {
                 var stats = ExtractTeamStats(doc);
 
                 gameData.HomeTeamStats = new() {
-                    Passing = stats.Passing.Where(n => NFLTeamConverter.GetTeamAbbreviation(n.Team) == NFLTeamConverter.GetTeamAbbreviation(gameData.HomeTeam)).ToList()
+                    Passing = stats.Passing.Where(n => NFLTeamConverter.GetTeamAbbreviation(n.Team) == NFLTeamConverter.GetTeamAbbreviation(gameData.HomeTeam)).ToList(),
+                    Rushing = stats.Rushing.Where(n => NFLTeamConverter.GetTeamAbbreviation(n.Team) == NFLTeamConverter.GetTeamAbbreviation(gameData.HomeTeam)).ToList(),
+                    Defense = stats.Defense.Where(n => NFLTeamConverter.GetTeamAbbreviation(n.Team) == NFLTeamConverter.GetTeamAbbreviation(gameData.HomeTeam)).ToList(),
+                    Kicking = stats.Kicking.Where(n => NFLTeamConverter.GetTeamAbbreviation(n.Team) == NFLTeamConverter.GetTeamAbbreviation(gameData.HomeTeam)).ToList(),
+                    KickReturns = stats.KickReturns.Where(n => NFLTeamConverter.GetTeamAbbreviation(n.Team) == NFLTeamConverter.GetTeamAbbreviation(gameData.HomeTeam)).ToList(),
+                    Punting = stats.Punting.Where(n => NFLTeamConverter.GetTeamAbbreviation(n.Team) == NFLTeamConverter.GetTeamAbbreviation(gameData.HomeTeam)).ToList(),
+                    PuntReturns = stats.PuntReturns.Where(n => NFLTeamConverter.GetTeamAbbreviation(n.Team) == NFLTeamConverter.GetTeamAbbreviation(gameData.HomeTeam)).ToList(),
+                    Receiving = stats.Receiving.Where(n => NFLTeamConverter.GetTeamAbbreviation(n.Team) == NFLTeamConverter.GetTeamAbbreviation(gameData.HomeTeam)).ToList(),
+                    Starters = stats.Starters.Where(n => NFLTeamConverter.GetTeamAbbreviation(n.Team) == NFLTeamConverter.GetTeamAbbreviation(gameData.HomeTeam)).ToList(),
                 };
 
                 gameData.AwayTeamStats = new() {
-                    Passing = stats.Passing.Where(n => NFLTeamConverter.GetTeamAbbreviation(n.Team) == NFLTeamConverter.GetTeamAbbreviation(gameData.AwayTeam)).ToList()
+                    Passing = stats.Passing.Where(n => NFLTeamConverter.GetTeamAbbreviation(n.Team) == NFLTeamConverter.GetTeamAbbreviation(gameData.AwayTeam)).ToList(),
+                    Rushing = stats.Rushing.Where(n => NFLTeamConverter.GetTeamAbbreviation(n.Team) == NFLTeamConverter.GetTeamAbbreviation(gameData.AwayTeam)).ToList(),
+                    Defense = stats.Defense.Where(n => NFLTeamConverter.GetTeamAbbreviation(n.Team) == NFLTeamConverter.GetTeamAbbreviation(gameData.AwayTeam)).ToList(),
+                    Kicking = stats.Kicking.Where(n => NFLTeamConverter.GetTeamAbbreviation(n.Team) == NFLTeamConverter.GetTeamAbbreviation(gameData.AwayTeam)).ToList(),
+                    KickReturns = stats.KickReturns.Where(n => NFLTeamConverter.GetTeamAbbreviation(n.Team) == NFLTeamConverter.GetTeamAbbreviation(gameData.AwayTeam)).ToList(),
+                    Punting = stats.Punting.Where(n => NFLTeamConverter.GetTeamAbbreviation(n.Team) == NFLTeamConverter.GetTeamAbbreviation(gameData.AwayTeam)).ToList(),
+                    PuntReturns = stats.PuntReturns.Where(n => NFLTeamConverter.GetTeamAbbreviation(n.Team) == NFLTeamConverter.GetTeamAbbreviation(gameData.AwayTeam)).ToList(),
+                    Receiving = stats.Receiving.Where(n => NFLTeamConverter.GetTeamAbbreviation(n.Team) == NFLTeamConverter.GetTeamAbbreviation(gameData.AwayTeam)).ToList(),
+                    Starters = stats.Starters.Where(n => NFLTeamConverter.GetTeamAbbreviation(n.Team) == NFLTeamConverter.GetTeamAbbreviation(gameData.AwayTeam)).ToList(),
                 };
 
                 // Extract drives
@@ -273,6 +387,45 @@ namespace NFLScraper {
                     });
                 }
             }
+
+            var advancedTable = doc.DocumentNode.SelectSingleNode($"//table[@id='passing_advanced']");
+
+           if (advancedTable == null) return;
+
+            var advancedRows = table.SelectNodes(".//tbody/tr[not(contains(@class, 'thead'))]");
+            if (advancedRows == null)
+                return;
+
+            foreach (var row in advancedRows) {
+                var playerName = row.SelectNodes(".//th")[0].InnerText;
+                var cells = row.SelectNodes(".//td");
+
+                var advStat = stats.Passing.FirstOrDefault(n => n.Player == playerName);
+
+                if (advStat == null)
+                    continue;
+
+                advStat.FirstDowns = ParseInt(cells[4].InnerText);
+                advStat.FirstDownRate = ParseDouble(cells[5].InnerText);
+                advStat.IntendedAirYards = ParseInt(cells[6].InnerText);
+                advStat.IntendedAirYardsPerAttempt = ParseDouble(cells[7].InnerText);
+                advStat.CompletedAirYards = ParseInt(cells[8].InnerText);
+                advStat.CompletedAirYardsPerCompletion = ParseDouble(cells[9].InnerText);
+                advStat.CompletedAirYardsPerAttempt = ParseDouble(cells[10].InnerText);
+                advStat.YardsAfterCatch = ParseInt(cells[11].InnerText);
+                advStat.YardsAfterCatchPerCompletion = ParseDouble(cells[12].InnerText);
+                advStat.Drops = ParseInt(cells[13].InnerText);
+                advStat.DropRate = ParseDouble(cells[14].InnerText);
+                advStat.BadThrows = ParseInt(cells[15].InnerText);
+                advStat.BadThrowRate = ParseDouble(cells[16].InnerText);
+                advStat.Sacks = ParseInt(cells[17].InnerText);
+                advStat.BlitzesFaced = ParseInt(cells[18].InnerText);
+                advStat.Hurries = ParseInt(cells[19].InnerText);
+                advStat.Pressures = ParseInt(cells[20].InnerText);
+                advStat.PressureRate = ParseDouble(cells[21].InnerText);
+                advStat.Scrambles = ParseInt(cells[22].InnerText);
+                advStat.YardsPerScramble = ParseDouble(cells[23].InnerText);
+            }
         }
 
         private string ExtractPlayerName(HtmlNode cell) {
@@ -305,13 +458,40 @@ namespace NFLScraper {
                     stats.Rushing.Add(new RushingStats {
                         Player = playerName,
                         Team = ExtractPlayerName(cells[0]),
-
                         Attempts = ParseInt(rushCells[0].InnerText),
                         Yards = ParseInt(rushCells[1].InnerText),
                         Touchdowns = ParseInt(rushCells[2].InnerText),
                         Long = ParseInt(rushCells[3].InnerText)
                     });
-                }
+                 }
+            }
+
+            // Try multiple possible selectors for rushing stats
+            var advTable = doc.DocumentNode.SelectSingleNode($"//table[@id='rushing_advanced']");
+            if (advTable == null)
+                return;
+
+            var advRows = advTable.SelectNodes(".//tbody/tr[not(contains(@class, 'thead'))]");
+            if (advRows == null)
+                return;
+
+            foreach (var row in advRows) {
+                var cells = row.SelectNodes(".//td");
+                var rushCells = row.SelectNodes(".//td[starts-with(@data-stat, 'rush')]");
+                var playerName = row.SelectNodes(".//th")[0].InnerText;
+
+                var advStat = stats.Rushing.FirstOrDefault(n => n.Player == playerName);
+
+                if (advStat == null)
+                    continue;
+
+                advStat.FirstDowns = ParseInt(cells[4].InnerText);
+                advStat.YardsBeforeContact = ParseInt(cells[5].InnerText);
+                advStat.YardsBeforeContactPerAttempt = ParseDouble(cells[6].InnerText);
+                advStat.YardsAfterContact = ParseInt(cells[7].InnerText);
+                advStat.YardsAfterContactPerAttempt = ParseDouble(cells[8].InnerText);
+                advStat.BrokenTackles = ParseInt(cells[9].InnerText);
+                advStat.AttemptsPerBrokenTackle = ParseDouble(cells[10].InnerText);
             }
         }
 
@@ -352,6 +532,47 @@ namespace NFLScraper {
                     });
                 }
             }
+
+            var advTable = doc.DocumentNode.SelectSingleNode($"//table[@id='receiving_advanced']");
+
+            if (advTable == null)
+                return;
+
+            var advRows = advTable.SelectNodes(".//tbody/tr[not(contains(@class, 'thead'))]");
+            if (advRows == null)
+                return;
+
+            foreach (var row in advRows) {
+
+                var playerName = row.SelectNodes(".//th")[0].InnerText;
+
+                var receivingCells = row.SelectNodes(".//td[starts-with(@data-stat, 'rec')]");
+
+                var receptions = row.SelectSingleNode(".//td[@data-stat='rec']");
+
+                var cells = row.SelectNodes(".//td");
+
+                var advStat = stats.Receiving.FirstOrDefault(n => n.Player ==  playerName);
+
+                if (advStat == null)
+                    continue;
+
+                advStat.Targets = ParseInt(cells[1].InnerText);
+                advStat.FirstDowns = ParseInt(cells[5].InnerText);
+                advStat.YardsBeforeCatch = ParseInt(cells[6].InnerText);
+                advStat.YardsBeforeCatchPerReception = ParseDouble(cells[7].InnerText);
+                advStat.YardsAfterCatch = ParseInt(cells[8].InnerText);
+                advStat.YardsAfterCatchPerReception = ParseDouble(cells[9].InnerText);
+                advStat.AverageDepthOfTarget = ParseDouble(cells[10].InnerText);
+                advStat.BrokenTackles = ParseInt(cells[11].InnerText);
+                advStat.ReceptionsPerBrokenTackle = ParseDouble(cells[12].InnerText);
+                advStat.Drops = ParseInt(cells[13].InnerText);
+                advStat.DropRate = ParseDouble(cells[14].InnerText);
+                advStat.Interceptions = ParseInt(cells[15].InnerText);
+                advStat.QBPasserRatingWhenTargeted = ParseDouble(cells[16].InnerText);
+
+
+            }
         }
 
         private void ExtractDefenseStats(HtmlDocument doc, TeamStats stats, string teamPrefix) {
@@ -376,14 +597,62 @@ namespace NFLScraper {
                     stats.Defense.Add(new DefenseStats {
                         Player = playerName,
                         Team = ExtractPlayerName(cells[0]),
-                        Tackles = ParseInt(cells[1].InnerText),
-                        Assists = cells.Count > 2 ? ParseInt(cells[2].InnerText) : 0,
-                        Sacks = cells.Count > 3 ? ParseInt(cells[3].InnerText) : 0,
-                        Interceptions = cells.Count > 4 ? ParseInt(cells[4].InnerText) : 0,
+                        Interceptions = cells.Count > 1 ? ParseInt(cells[1].InnerText) : 0,
+                        InterceptionYards = cells.Count > 2 ? ParseInt(cells[2].InnerText) : 0,
+                        InterceptionTouchdowns = cells.Count > 3 ? ParseInt(cells[3].InnerText) : 0,
                         PassesDefended = cells.Count > 5 ? ParseInt(cells[5].InnerText) : 0,
-                        ForcedFumbles = cells.Count > 6 ? ParseInt(cells[6].InnerText) : 0,
-                        FumbleRecoveries = cells.Count > 7 ? ParseInt(cells[7].InnerText) : 0
+                        Sacks = cells.Count > 3 ? ParseInt(cells[6].InnerText) : 0,
+                        CombinedTackles = cells.Count > 6 ? ParseInt(cells[7].InnerText) : 0,
+                        SoloTackles = cells.Count > 7 ? ParseInt(cells[8].InnerText) : 0,
+                        Assists = cells.Count > 8 ? ParseInt(cells[9].InnerText) : 0,                        
+                        TacklesForLoss = cells.Count > 3 ? ParseInt(cells[10].InnerText) : 0,
+                        QuarterbackHits = cells.Count > 3 ? ParseInt(cells[11].InnerText) : 0,
+                        FumblesRecovered = cells.Count > 3 ? ParseInt(cells[12].InnerText) : 0,
+                        FumblesRecoveredYards = cells.Count > 3 ? ParseInt(cells[13].InnerText) : 0,
+                        FumbleRecoveredTouchdowns = cells.Count > 3 ? ParseInt(cells[14].InnerText) : 0,
+                        ForcedFumbles = cells.Count > 6 ? ParseInt(cells[15].InnerText) : 0,
                     });
+                }
+            }
+
+            var advancedTable = doc.DocumentNode.SelectSingleNode($"//table[@id='defense_advanced']");
+
+            if (advancedTable == null)
+                return;
+
+            var advancedRows = advancedTable.SelectNodes(".//tbody/tr[not(contains(@class, 'thead'))]");
+            if (advancedRows == null)
+                return;
+
+            foreach (var row in advancedRows) {
+
+                var playerName = row.SelectNodes(".//th")[0].InnerText;
+
+                var cells = row.SelectNodes(".//td");
+                if (cells?.Count >= 5) // Minimum required columns
+                {
+                    var advStat = stats.Defense.FirstOrDefault(n => n.Player == playerName);
+
+                    if (advStat == null)
+                        continue;
+
+                    advStat.Targets = ParseInt(cells[2].InnerText);
+                    advStat.CompletionsAllowed = ParseInt(cells[3].InnerText);
+                    advStat.CompletionPercentageAllowed = ParseDouble(cells[4].InnerText);
+                    advStat.YardsAllowed = ParseInt(cells[5].InnerText);
+                    advStat.YardsPerCompletionAllowed = ParseDouble(cells[6].InnerText);
+                    advStat.YardsPerTargetAllowed = ParseDouble(cells[7].InnerText);
+                    advStat.TouchdownsAllowed = ParseInt(cells[8].InnerText);
+                    advStat.PasserRatingAllowed = ParseDouble(cells[9].InnerText);
+                    advStat.DADOT = ParseInt(cells[10].InnerText);
+                    advStat.AirYardsAllowed = ParseInt(cells[11].InnerText);
+                    advStat.YardsAfterCatchAllowed = ParseInt(cells[12].InnerText);
+                    advStat.Blitzes = ParseInt(cells[13].InnerText);
+                    advStat.Hurries = ParseInt(cells[14].InnerText);
+                    advStat.QBKnockdowns = ParseInt(cells[15].InnerText);
+                    advStat.Pressures = ParseInt(cells[17].InnerText);
+                    advStat.MissedTackles = ParseInt(cells[19].InnerText);
+                    advStat.MissedTackleRate = ParseDouble(cells[20].InnerText);
                 }
             }
         }
@@ -402,20 +671,13 @@ namespace NFLScraper {
         }
 
         private void ExtractReturnStats(HtmlDocument doc, TeamStats stats, string teamPrefix) {
-            // Kick Returns - try multiple selectors
-            var kickTable = doc.DocumentNode.SelectSingleNode($"//table[@id='{teamPrefix}_kick_returns']") ??
-                           doc.DocumentNode.SelectSingleNode($"//table[contains(@id, 'kick')]") ??
-                           FindTableByCaption(doc, "Kick Returns");
-            ExtractReturnStatsFromTable(kickTable, stats.KickReturns);
 
             // Punt Returns - try multiple selectors
-            var puntTable = doc.DocumentNode.SelectSingleNode($"//table[@id='{teamPrefix}_punt_returns']") ??
-                           doc.DocumentNode.SelectSingleNode($"//table[contains(@id, 'punt')]") ??
-                           FindTableByCaption(doc, "Punt Returns");
-            ExtractReturnStatsFromTable(puntTable, stats.PuntReturns);
+            var puntTable = doc.DocumentNode.SelectSingleNode($"//table[@id='returns']");
+            ExtractReturnStatsFromTable(puntTable, stats.PuntReturns, stats.KickReturns);
         }
 
-        private void ExtractReturnStatsFromTable(HtmlNode table, List<ReturnStats> returnsList) {
+        private void ExtractReturnStatsFromTable(HtmlNode table, List<ReturnStats> returnsList, List<ReturnStats> kickingList) {
             if (table == null)
                 return;
 
@@ -427,17 +689,26 @@ namespace NFLScraper {
                 var playerName = row.SelectNodes(".//th")[0].InnerText;
 
                 var cells = row.SelectNodes(".//td");
-                if (cells?.Count >= 5) {
-                    returnsList.Add(new ReturnStats {
-                        Player = playerName,
-                        Team = ExtractPlayerName(cells[0]),
-                        Returns = ParseInt(cells[1].InnerText),
-                        Yards = ParseInt(cells[2].InnerText),
-                        Average = ParseDouble(cells[3].InnerText),
-                        Long = ParseInt(cells[4].InnerText),
-                        Touchdowns = cells.Count > 5 ? ParseInt(cells[5].InnerText) : 0
-                    });
-                }
+                returnsList.Add(new ReturnStats {
+                    Player = playerName,
+                    Team = ExtractPlayerName(cells[0]),
+                    Returns = ParseInt(cells[1].InnerText),
+                    Yards = ParseInt(cells[2].InnerText),
+                    Average = ParseDouble(cells[3].InnerText),
+                    Touchdowns = ParseInt(cells[4].InnerText),
+                    Long = ParseInt(cells[5].InnerText),
+
+                });
+
+                kickingList.Add(new ReturnStats {
+                    Player = playerName,
+                    Team = ExtractPlayerName(cells[0]),
+                    Returns = ParseInt(cells[6].InnerText),
+                    Yards = ParseInt(cells[7].InnerText),
+                    Average = ParseDouble(cells[8].InnerText),
+                    Long = ParseInt(cells[9].InnerText),
+                    Touchdowns = ParseInt(cells[10].InnerText)
+                });
             }
         }
 
@@ -461,9 +732,14 @@ namespace NFLScraper {
                     stats.Kicking.Add(new KickingStats {
                         Player = playerName,
                         Team = ExtractPlayerName(cells[0]),
-                        FieldGoals = cells[1].InnerText.Trim(),
-                        ExtraPoints = cells[2].InnerText.Trim(),
-                        Points = ParseInt(cells[3].InnerText)
+                        ExtraPoints = ParseInt(cells[1].InnerText),
+                        ExtraPointsAttempted = ParseInt(cells[2].InnerText),
+                        FieldGoals = ParseInt(cells[3].InnerText),
+                        FieldGoalsAttempted = ParseInt(cells[4].InnerText),
+                        Punts = ParseInt(cells[5].InnerText),
+                        TotalPuntYards = ParseInt(cells[6].InnerText),
+                        YardsPerPunt = ParseDouble(cells[7].InnerText),
+                        LongestPunt = ParseInt(cells[8].InnerText)
                     });
                 }
             }

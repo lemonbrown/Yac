@@ -8,9 +8,11 @@ namespace YacData.Models
 {
     public class GamePlayerRushingStats
     {
-        public int PlayerId { get; set; }
-        public int TeamId { get; set; }
-        public int GameId { get; set; }
+        public string PlayerName { get; set; } = "";
+        public string TeamName { get; set; } = "";
+        public string PlayerId { get; set; }
+        public string TeamId { get; set; }
+        public string GameId { get; set; }
 
         public int Attempts { get; set; }                  // Att
         public int Yards { get; set; }                     // Yds

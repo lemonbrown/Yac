@@ -115,10 +115,7 @@ namespace DataScraper
 
                 var teamUrl = row.SelectSingleNode("th/a")?.Attributes.FirstOrDefault()?.Value;
 
-                if (teamUrl == null)
-                    continue;
-
-                var turl = $"https://www.pro-football-reference.com{teamUrl}";
+                var turl = !string.IsNullOrEmpty(teamUrl)? $"https://www.pro-football-reference.com{teamUrl}" : "";
 
 
                 var teamName = teamNameCols[0].InnerText.Trim();
@@ -139,9 +136,9 @@ namespace DataScraper
                 {
                     Name = teamName,
 
-                    ActiveStartDateTime = new DateTime(int.Parse(fromYear), 1, 1),
+                    ActiveStartDateTime = new DateTime(int.Parse(fromYear), 8, 1),
 
-                    ActiveEndDateTime = new DateTime(int.Parse(toYear), 1, 1),
+                    ActiveEndDateTime = new DateTime(int.Parse(toYear) + 1, 2, 28),
 
                     Divison = ParseInt(cols[18].InnerText)
                 };

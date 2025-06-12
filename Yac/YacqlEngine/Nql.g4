@@ -8,7 +8,7 @@ query        : playerQuery
 
 playerQuery  : 'player:' NAME 'stats' whereClause? ;
 teamQuery    : ('team:' NAME | 'teams') fieldSelection? whereClause? ;
-gameQuery    : 'games' whereClause ;
+gameQuery    : 'games' fieldSelection? whereClause? ;
 seasonQuery  : 'seasons' fieldSelection? whereClause? ;
 
 playerList  : NAME (',' NAME)* ;

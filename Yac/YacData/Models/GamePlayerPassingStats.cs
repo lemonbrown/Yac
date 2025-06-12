@@ -6,13 +6,15 @@ using System.Threading.Tasks;
 
 namespace YacData.Models
 {
-    public class GamePlayerPassingStats
-    {
+    public class GamePlayerPassingStats {
 
-        public int Id { get; set; }
-        public int PlayerId { get; set; }
-        public int TeamId { get; set; }
-        public int GameId { get; set; }
+        public string Id { get; set; } = Guid.NewGuid().ToString();
+
+        public string PlayerName { get; set; } = "";
+        public string TeamName { get; set; } = "";
+        public string PlayerId { get; set; }
+        public string TeamId { get; set; }
+        public string GameId { get; set; }
 
         // Basic Passing
         public int Completions { get; set; }     // Cmp

@@ -8,6 +8,8 @@ namespace YacData.Models
 {
     public class GamePlayerPuntReturnsStats
     {
+        public string PlayerName { get; set; } = "";
+        public string TeamName { get; set; } = "";
         public int Returns { get; set; }              // Ret
         public int Yards { get; set; }                // Yds
         public double YardsPerReturn { get; set; }    // Y/R

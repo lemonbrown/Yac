@@ -338,6 +338,9 @@ public partial class NqlParser : Parser {
 	}
 
 	public partial class GameQueryContext : ParserRuleContext {
+		[System.Diagnostics.DebuggerNonUserCode] public FieldSelectionContext fieldSelection() {
+			return GetRuleContext<FieldSelectionContext>(0);
+		}
 		[System.Diagnostics.DebuggerNonUserCode] public WhereClauseContext whereClause() {
 			return GetRuleContext<WhereClauseContext>(0);
 		}
@@ -368,13 +371,32 @@ public partial class NqlParser : Parser {
 	public GameQueryContext gameQuery() {
 		GameQueryContext _localctx = new GameQueryContext(Context, State);
 		EnterRule(_localctx, 6, RULE_gameQuery);
+		int _la;
 		try {
 			EnterOuterAlt(_localctx, 1);
 			{
 			State = 51;
 			Match(T__4);
-			State = 52;
-			whereClause();
+			State = 53;
+			ErrorHandler.Sync(this);
+			_la = TokenStream.LA(1);
+			if ((((_la) & ~0x3f) == 0 && ((1L << _la) & 528128L) != 0)) {
+				{
+				State = 52;
+				fieldSelection();
+				}
+			}
+
+			State = 56;
+			ErrorHandler.Sync(this);
+			_la = TokenStream.LA(1);
+			if (_la==T__11) {
+				{
+				State = 55;
+				whereClause();
+				}
+			}
+
 			}
 		}
 		catch (RecognitionException re) {
@@ -426,24 +448,24 @@ public partial class NqlParser : Parser {
 		try {
 			EnterOuterAlt(_localctx, 1);
 			{
-			State = 54;
+			State = 58;
 			Match(T__5);
-			State = 56;
+			State = 60;
 			ErrorHandler.Sync(this);
 			_la = TokenStream.LA(1);
 			if ((((_la) & ~0x3f) == 0 && ((1L << _la) & 528128L) != 0)) {
 				{
-				State = 55;
+				State = 59;
 				fieldSelection();
 				}
 			}
 
-			State = 59;
+			State = 63;
 			ErrorHandler.Sync(this);
 			_la = TokenStream.LA(1);
 			if (_la==T__11) {
 				{
-				State = 58;
+				State = 62;
 				whereClause();
 				}
 			}
@@ -497,21 +519,21 @@ public partial class NqlParser : Parser {
 		try {
 			EnterOuterAlt(_localctx, 1);
 			{
-			State = 61;
+			State = 65;
 			Match(NAME);
-			State = 66;
+			State = 70;
 			ErrorHandler.Sync(this);
 			_la = TokenStream.LA(1);
 			while (_la==T__6) {
 				{
 				{
-				State = 62;
+				State = 66;
 				Match(T__6);
-				State = 63;
+				State = 67;
 				Match(NAME);
 				}
 				}
-				State = 68;
+				State = 72;
 				ErrorHandler.Sync(this);
 				_la = TokenStream.LA(1);
 			}
@@ -564,21 +586,21 @@ public partial class NqlParser : Parser {
 		try {
 			EnterOuterAlt(_localctx, 1);
 			{
-			State = 69;
+			State = 73;
 			Match(NAME);
-			State = 74;
+			State = 78;
 			ErrorHandler.Sync(this);
 			_la = TokenStream.LA(1);
 			while (_la==T__6) {
 				{
 				{
-				State = 70;
+				State = 74;
 				Match(T__6);
-				State = 71;
+				State = 75;
 				Match(NAME);
 				}
 				}
-				State = 76;
+				State = 80;
 				ErrorHandler.Sync(this);
 				_la = TokenStream.LA(1);
 			}
@@ -631,21 +653,21 @@ public partial class NqlParser : Parser {
 		try {
 			EnterOuterAlt(_localctx, 1);
 			{
-			State = 77;
+			State = 81;
 			Match(NAME);
-			State = 82;
+			State = 86;
 			ErrorHandler.Sync(this);
 			_la = TokenStream.LA(1);
 			while (_la==T__6) {
 				{
 				{
-				State = 78;
+				State = 82;
 				Match(T__6);
-				State = 79;
+				State = 83;
 				Match(NAME);
 				}
 				}
-				State = 84;
+				State = 88;
 				ErrorHandler.Sync(this);
 				_la = TokenStream.LA(1);
 			}
@@ -704,15 +726,15 @@ public partial class NqlParser : Parser {
 		try {
 			EnterOuterAlt(_localctx, 1);
 			{
-			State = 85;
+			State = 89;
 			field();
-			State = 90;
+			State = 94;
 			ErrorHandler.Sync(this);
 			_la = TokenStream.LA(1);
 			while (_la==T__6 || _la==WS) {
 				{
 				{
-				State = 86;
+				State = 90;
 				_la = TokenStream.LA(1);
 				if ( !(_la==T__6 || _la==WS) ) {
 				ErrorHandler.RecoverInline(this);
@@ -721,11 +743,11 @@ public partial class NqlParser : Parser {
 					ErrorHandler.ReportMatch(this);
 				    Consume();
 				}
-				State = 87;
+				State = 91;
 				field();
 				}
 				}
-				State = 92;
+				State = 96;
 				ErrorHandler.Sync(this);
 				_la = TokenStream.LA(1);
 			}
@@ -801,7 +823,7 @@ public partial class NqlParser : Parser {
 		EnterRule(_localctx, 18, RULE_field);
 		int _la;
 		try {
-			State = 96;
+			State = 100;
 			ErrorHandler.Sync(this);
 			switch (TokenStream.LA(1)) {
 			case T__7:
@@ -811,7 +833,7 @@ public partial class NqlParser : Parser {
 				_localctx = new AggregateFieldContext(_localctx);
 				EnterOuterAlt(_localctx, 1);
 				{
-				State = 93;
+				State = 97;
 				_la = TokenStream.LA(1);
 				if ( !((((_la) & ~0x3f) == 0 && ((1L << _la) & 3840L) != 0)) ) {
 				ErrorHandler.RecoverInline(this);
@@ -820,7 +842,7 @@ public partial class NqlParser : Parser {
 					ErrorHandler.ReportMatch(this);
 				    Consume();
 				}
-				State = 94;
+				State = 98;
 				Match(NAME);
 				}
 				break;
@@ -828,7 +850,7 @@ public partial class NqlParser : Parser {
 				_localctx = new NameFieldContext(_localctx);
 				EnterOuterAlt(_localctx, 2);
 				{
-				State = 95;
+				State = 99;
 				Match(NAME);
 				}
 				break;
@@ -885,23 +907,23 @@ public partial class NqlParser : Parser {
 		try {
 			EnterOuterAlt(_localctx, 1);
 			{
-			State = 98;
+			State = 102;
 			Match(T__11);
-			State = 99;
+			State = 103;
 			condition();
-			State = 104;
+			State = 108;
 			ErrorHandler.Sync(this);
 			_la = TokenStream.LA(1);
 			while (_la==T__12) {
 				{
 				{
-				State = 100;
+				State = 104;
 				Match(T__12);
-				State = 101;
+				State = 105;
 				condition();
 				}
 				}
-				State = 106;
+				State = 110;
 				ErrorHandler.Sync(this);
 				_la = TokenStream.LA(1);
 			}
@@ -956,11 +978,11 @@ public partial class NqlParser : Parser {
 		try {
 			EnterOuterAlt(_localctx, 1);
 			{
-			State = 107;
+			State = 111;
 			Match(NAME);
-			State = 108;
+			State = 112;
 			@operator();
-			State = 109;
+			State = 113;
 			value();
 			}
 		}
@@ -1007,7 +1029,7 @@ public partial class NqlParser : Parser {
 		try {
 			EnterOuterAlt(_localctx, 1);
 			{
-			State = 111;
+			State = 115;
 			_la = TokenStream.LA(1);
 			if ( !((((_la) & ~0x3f) == 0 && ((1L << _la) & 507904L) != 0)) ) {
 			ErrorHandler.RecoverInline(this);
@@ -1064,7 +1086,7 @@ public partial class NqlParser : Parser {
 		try {
 			EnterOuterAlt(_localctx, 1);
 			{
-			State = 113;
+			State = 117;
 			_la = TokenStream.LA(1);
 			if ( !((((_la) & ~0x3f) == 0 && ((1L << _la) & 3670016L) != 0)) ) {
 			ErrorHandler.RecoverInline(this);
@@ -1087,40 +1109,42 @@ public partial class NqlParser : Parser {
 	}
 
 	private static int[] _serializedATN = {
-		4,1,22,116,2,0,7,0,2,1,7,1,2,2,7,2,2,3,7,3,2,4,7,4,2,5,7,5,2,6,7,6,2,7,
+		4,1,22,120,2,0,7,0,2,1,7,1,2,2,7,2,2,3,7,3,2,4,7,4,2,5,7,5,2,6,7,6,2,7,
 		7,7,2,8,7,8,2,9,7,9,2,10,7,10,2,11,7,11,2,12,7,12,2,13,7,13,1,0,1,0,1,
 		0,1,0,3,0,33,8,0,1,1,1,1,1,1,1,1,3,1,39,8,1,1,2,1,2,1,2,3,2,44,8,2,1,2,
-		3,2,47,8,2,1,2,3,2,50,8,2,1,3,1,3,1,3,1,4,1,4,3,4,57,8,4,1,4,3,4,60,8,
-		4,1,5,1,5,1,5,5,5,65,8,5,10,5,12,5,68,9,5,1,6,1,6,1,6,5,6,73,8,6,10,6,
-		12,6,76,9,6,1,7,1,7,1,7,5,7,81,8,7,10,7,12,7,84,9,7,1,8,1,8,1,8,5,8,89,
-		8,8,10,8,12,8,92,9,8,1,9,1,9,1,9,3,9,97,8,9,1,10,1,10,1,10,1,10,5,10,103,
-		8,10,10,10,12,10,106,9,10,1,11,1,11,1,11,1,11,1,12,1,12,1,13,1,13,1,13,
-		0,0,14,0,2,4,6,8,10,12,14,16,18,20,22,24,26,0,4,2,0,7,7,22,22,1,0,8,11,
-		1,0,14,18,1,0,19,21,116,0,32,1,0,0,0,2,34,1,0,0,0,4,43,1,0,0,0,6,51,1,
-		0,0,0,8,54,1,0,0,0,10,61,1,0,0,0,12,69,1,0,0,0,14,77,1,0,0,0,16,85,1,0,
-		0,0,18,96,1,0,0,0,20,98,1,0,0,0,22,107,1,0,0,0,24,111,1,0,0,0,26,113,1,
-		0,0,0,28,33,3,2,1,0,29,33,3,4,2,0,30,33,3,6,3,0,31,33,3,8,4,0,32,28,1,
-		0,0,0,32,29,1,0,0,0,32,30,1,0,0,0,32,31,1,0,0,0,33,1,1,0,0,0,34,35,5,1,
-		0,0,35,36,5,19,0,0,36,38,5,2,0,0,37,39,3,20,10,0,38,37,1,0,0,0,38,39,1,
-		0,0,0,39,3,1,0,0,0,40,41,5,3,0,0,41,44,5,19,0,0,42,44,5,4,0,0,43,40,1,
-		0,0,0,43,42,1,0,0,0,44,46,1,0,0,0,45,47,3,16,8,0,46,45,1,0,0,0,46,47,1,
-		0,0,0,47,49,1,0,0,0,48,50,3,20,10,0,49,48,1,0,0,0,49,50,1,0,0,0,50,5,1,
-		0,0,0,51,52,5,5,0,0,52,53,3,20,10,0,53,7,1,0,0,0,54,56,5,6,0,0,55,57,3,
-		16,8,0,56,55,1,0,0,0,56,57,1,0,0,0,57,59,1,0,0,0,58,60,3,20,10,0,59,58,
-		1,0,0,0,59,60,1,0,0,0,60,9,1,0,0,0,61,66,5,19,0,0,62,63,5,7,0,0,63,65,
-		5,19,0,0,64,62,1,0,0,0,65,68,1,0,0,0,66,64,1,0,0,0,66,67,1,0,0,0,67,11,
-		1,0,0,0,68,66,1,0,0,0,69,74,5,19,0,0,70,71,5,7,0,0,71,73,5,19,0,0,72,70,
-		1,0,0,0,73,76,1,0,0,0,74,72,1,0,0,0,74,75,1,0,0,0,75,13,1,0,0,0,76,74,
-		1,0,0,0,77,82,5,19,0,0,78,79,5,7,0,0,79,81,5,19,0,0,80,78,1,0,0,0,81,84,
-		1,0,0,0,82,80,1,0,0,0,82,83,1,0,0,0,83,15,1,0,0,0,84,82,1,0,0,0,85,90,
-		3,18,9,0,86,87,7,0,0,0,87,89,3,18,9,0,88,86,1,0,0,0,89,92,1,0,0,0,90,88,
-		1,0,0,0,90,91,1,0,0,0,91,17,1,0,0,0,92,90,1,0,0,0,93,94,7,1,0,0,94,97,
-		5,19,0,0,95,97,5,19,0,0,96,93,1,0,0,0,96,95,1,0,0,0,97,19,1,0,0,0,98,99,
-		5,12,0,0,99,104,3,22,11,0,100,101,5,13,0,0,101,103,3,22,11,0,102,100,1,
-		0,0,0,103,106,1,0,0,0,104,102,1,0,0,0,104,105,1,0,0,0,105,21,1,0,0,0,106,
-		104,1,0,0,0,107,108,5,19,0,0,108,109,3,24,12,0,109,110,3,26,13,0,110,23,
-		1,0,0,0,111,112,7,2,0,0,112,25,1,0,0,0,113,114,7,3,0,0,114,27,1,0,0,0,
-		13,32,38,43,46,49,56,59,66,74,82,90,96,104
+		3,2,47,8,2,1,2,3,2,50,8,2,1,3,1,3,3,3,54,8,3,1,3,3,3,57,8,3,1,4,1,4,3,
+		4,61,8,4,1,4,3,4,64,8,4,1,5,1,5,1,5,5,5,69,8,5,10,5,12,5,72,9,5,1,6,1,
+		6,1,6,5,6,77,8,6,10,6,12,6,80,9,6,1,7,1,7,1,7,5,7,85,8,7,10,7,12,7,88,
+		9,7,1,8,1,8,1,8,5,8,93,8,8,10,8,12,8,96,9,8,1,9,1,9,1,9,3,9,101,8,9,1,
+		10,1,10,1,10,1,10,5,10,107,8,10,10,10,12,10,110,9,10,1,11,1,11,1,11,1,
+		11,1,12,1,12,1,13,1,13,1,13,0,0,14,0,2,4,6,8,10,12,14,16,18,20,22,24,26,
+		0,4,2,0,7,7,22,22,1,0,8,11,1,0,14,18,1,0,19,21,122,0,32,1,0,0,0,2,34,1,
+		0,0,0,4,43,1,0,0,0,6,51,1,0,0,0,8,58,1,0,0,0,10,65,1,0,0,0,12,73,1,0,0,
+		0,14,81,1,0,0,0,16,89,1,0,0,0,18,100,1,0,0,0,20,102,1,0,0,0,22,111,1,0,
+		0,0,24,115,1,0,0,0,26,117,1,0,0,0,28,33,3,2,1,0,29,33,3,4,2,0,30,33,3,
+		6,3,0,31,33,3,8,4,0,32,28,1,0,0,0,32,29,1,0,0,0,32,30,1,0,0,0,32,31,1,
+		0,0,0,33,1,1,0,0,0,34,35,5,1,0,0,35,36,5,19,0,0,36,38,5,2,0,0,37,39,3,
+		20,10,0,38,37,1,0,0,0,38,39,1,0,0,0,39,3,1,0,0,0,40,41,5,3,0,0,41,44,5,
+		19,0,0,42,44,5,4,0,0,43,40,1,0,0,0,43,42,1,0,0,0,44,46,1,0,0,0,45,47,3,
+		16,8,0,46,45,1,0,0,0,46,47,1,0,0,0,47,49,1,0,0,0,48,50,3,20,10,0,49,48,
+		1,0,0,0,49,50,1,0,0,0,50,5,1,0,0,0,51,53,5,5,0,0,52,54,3,16,8,0,53,52,
+		1,0,0,0,53,54,1,0,0,0,54,56,1,0,0,0,55,57,3,20,10,0,56,55,1,0,0,0,56,57,
+		1,0,0,0,57,7,1,0,0,0,58,60,5,6,0,0,59,61,3,16,8,0,60,59,1,0,0,0,60,61,
+		1,0,0,0,61,63,1,0,0,0,62,64,3,20,10,0,63,62,1,0,0,0,63,64,1,0,0,0,64,9,
+		1,0,0,0,65,70,5,19,0,0,66,67,5,7,0,0,67,69,5,19,0,0,68,66,1,0,0,0,69,72,
+		1,0,0,0,70,68,1,0,0,0,70,71,1,0,0,0,71,11,1,0,0,0,72,70,1,0,0,0,73,78,
+		5,19,0,0,74,75,5,7,0,0,75,77,5,19,0,0,76,74,1,0,0,0,77,80,1,0,0,0,78,76,
+		1,0,0,0,78,79,1,0,0,0,79,13,1,0,0,0,80,78,1,0,0,0,81,86,5,19,0,0,82,83,
+		5,7,0,0,83,85,5,19,0,0,84,82,1,0,0,0,85,88,1,0,0,0,86,84,1,0,0,0,86,87,
+		1,0,0,0,87,15,1,0,0,0,88,86,1,0,0,0,89,94,3,18,9,0,90,91,7,0,0,0,91,93,
+		3,18,9,0,92,90,1,0,0,0,93,96,1,0,0,0,94,92,1,0,0,0,94,95,1,0,0,0,95,17,
+		1,0,0,0,96,94,1,0,0,0,97,98,7,1,0,0,98,101,5,19,0,0,99,101,5,19,0,0,100,
+		97,1,0,0,0,100,99,1,0,0,0,101,19,1,0,0,0,102,103,5,12,0,0,103,108,3,22,
+		11,0,104,105,5,13,0,0,105,107,3,22,11,0,106,104,1,0,0,0,107,110,1,0,0,
+		0,108,106,1,0,0,0,108,109,1,0,0,0,109,21,1,0,0,0,110,108,1,0,0,0,111,112,
+		5,19,0,0,112,113,3,24,12,0,113,114,3,26,13,0,114,23,1,0,0,0,115,116,7,
+		2,0,0,116,25,1,0,0,0,117,118,7,3,0,0,118,27,1,0,0,0,15,32,38,43,46,49,
+		53,56,60,63,70,78,86,94,100,108
 	};
 
 	public static readonly ATN _ATN =
