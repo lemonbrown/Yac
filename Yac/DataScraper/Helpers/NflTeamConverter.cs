@@ -210,6 +210,8 @@ namespace DataScraper.Helpers {
 
             if (abbv == "KAN")
                 return "KC";
+            if (abbv == "TAM")
+                return "TB";
 
             return abbv;
         }

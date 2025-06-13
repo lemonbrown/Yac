@@ -52,6 +52,19 @@ namespace YacqlEngine.Queries {
             if (leftProp == null)
                 return false;
 
+            //var rightProp = typeof(TeamSeason).GetProperty(filter.Value, BindingFlags.IgnoreCase | BindingFlags.Public | BindingFlags.Instance);
+
+            //object? rightValue;
+
+            //if(rightProp != null) {
+
+            //    rightValue = rightProp.GetValue(season);
+
+            //} else {
+
+            //    rightValue = filter.Value;
+            //}
+
             var leftValue = leftProp.GetValue(season);
 
             if (filter.IsFieldComparison) {
@@ -157,7 +170,7 @@ namespace YacqlEngine.Queries {
 
             if (!regularFields.Any()) {
 
-                result["YEAR"] = item.Season.Year;
+                //result["YEAR"] = item.Season.Year;
 
             }
 

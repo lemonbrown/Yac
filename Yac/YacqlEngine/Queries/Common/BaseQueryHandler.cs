@@ -159,6 +159,8 @@ namespace YacqlEngine.Queries.Common {
         public void Dispose() {
             _db?.Dispose();
         }
+
+
     }
 
 }

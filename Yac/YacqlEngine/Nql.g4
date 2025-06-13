@@ -17,7 +17,7 @@ gameList    : NAME (',' NAME)* ;
 
 fieldSelection : field ((',' | WS) field)* ;
 field
-    : ('total' | 'avg' | 'most' | 'least') NAME  # aggregateField
+    : ('total' | 'avg' | 'most' | 'least' | 'count' ) NAME?  # aggregateField
     | NAME                  # nameField
     ;
 

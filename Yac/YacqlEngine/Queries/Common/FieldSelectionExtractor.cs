@@ -20,7 +20,7 @@ namespace YacqlEngine.Queries.Common {
 
                 if (fieldCtx is NqlParser.AggregateFieldContext aggregateField) {
                     fields.Add(new FieldSelection {
-                        Field = aggregateField.NAME().GetText(),
+                        Field = aggregateField.NAME() != null ? aggregateField.NAME().GetText() : "",
                         Aggregation = aggregateField.GetChild(0).GetText()
                     });
                 }
