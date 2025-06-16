@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using static NqlParser;
 
 namespace YacqlEngine.Queries.Common {
 
@@ -23,7 +22,7 @@ namespace YacqlEngine.Queries.Common {
                         Field = aggregateField.NAME() != null ? aggregateField.NAME().GetText() : "",
                         Aggregation = aggregateField.GetChild(0).GetText()
                     });
-                }
+                }              
                 else if (fieldCtx is NqlParser.NameFieldContext nameField) {
                     fields.Add(new FieldSelection {
                         Field = nameField.NAME().GetText(),

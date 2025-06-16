@@ -62,24 +62,6 @@ public interface INqlVisitor<Result> : IParseTreeVisitor<Result> {
 	/// <return>The visitor result.</return>
 	Result VisitSeasonQuery([NotNull] NqlParser.SeasonQueryContext context);
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="NqlParser.playerList"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	/// <return>The visitor result.</return>
-	Result VisitPlayerList([NotNull] NqlParser.PlayerListContext context);
-	/// <summary>
-	/// Visit a parse tree produced by <see cref="NqlParser.teamList"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	/// <return>The visitor result.</return>
-	Result VisitTeamList([NotNull] NqlParser.TeamListContext context);
-	/// <summary>
-	/// Visit a parse tree produced by <see cref="NqlParser.gameList"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	/// <return>The visitor result.</return>
-	Result VisitGameList([NotNull] NqlParser.GameListContext context);
-	/// <summary>
 	/// Visit a parse tree produced by <see cref="NqlParser.fieldSelection"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
@@ -99,6 +81,19 @@ public interface INqlVisitor<Result> : IParseTreeVisitor<Result> {
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
 	Result VisitNameField([NotNull] NqlParser.NameFieldContext context);
+	/// <summary>
+	/// Visit a parse tree produced by the <c>groupField</c>
+	/// labeled alternative in <see cref="NqlParser.groupingClause"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitGroupField([NotNull] NqlParser.GroupFieldContext context);
+	/// <summary>
+	/// Visit a parse tree produced by <see cref="NqlParser.groupingField"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitGroupingField([NotNull] NqlParser.GroupingFieldContext context);
 	/// <summary>
 	/// Visit a parse tree produced by <see cref="NqlParser.whereClause"/>.
 	/// </summary>

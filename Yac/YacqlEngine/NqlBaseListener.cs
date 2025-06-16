@@ -96,42 +96,6 @@ public partial class NqlBaseListener : INqlListener {
 	/// <param name="context">The parse tree.</param>
 	public virtual void ExitSeasonQuery([NotNull] NqlParser.SeasonQueryContext context) { }
 	/// <summary>
-	/// Enter a parse tree produced by <see cref="NqlParser.playerList"/>.
-	/// <para>The default implementation does nothing.</para>
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	public virtual void EnterPlayerList([NotNull] NqlParser.PlayerListContext context) { }
-	/// <summary>
-	/// Exit a parse tree produced by <see cref="NqlParser.playerList"/>.
-	/// <para>The default implementation does nothing.</para>
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	public virtual void ExitPlayerList([NotNull] NqlParser.PlayerListContext context) { }
-	/// <summary>
-	/// Enter a parse tree produced by <see cref="NqlParser.teamList"/>.
-	/// <para>The default implementation does nothing.</para>
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	public virtual void EnterTeamList([NotNull] NqlParser.TeamListContext context) { }
-	/// <summary>
-	/// Exit a parse tree produced by <see cref="NqlParser.teamList"/>.
-	/// <para>The default implementation does nothing.</para>
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	public virtual void ExitTeamList([NotNull] NqlParser.TeamListContext context) { }
-	/// <summary>
-	/// Enter a parse tree produced by <see cref="NqlParser.gameList"/>.
-	/// <para>The default implementation does nothing.</para>
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	public virtual void EnterGameList([NotNull] NqlParser.GameListContext context) { }
-	/// <summary>
-	/// Exit a parse tree produced by <see cref="NqlParser.gameList"/>.
-	/// <para>The default implementation does nothing.</para>
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	public virtual void ExitGameList([NotNull] NqlParser.GameListContext context) { }
-	/// <summary>
 	/// Enter a parse tree produced by <see cref="NqlParser.fieldSelection"/>.
 	/// <para>The default implementation does nothing.</para>
 	/// </summary>
@@ -171,6 +135,32 @@ public partial class NqlBaseListener : INqlListener {
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	public virtual void ExitNameField([NotNull] NqlParser.NameFieldContext context) { }
+	/// <summary>
+	/// Enter a parse tree produced by the <c>groupField</c>
+	/// labeled alternative in <see cref="NqlParser.groupingClause"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void EnterGroupField([NotNull] NqlParser.GroupFieldContext context) { }
+	/// <summary>
+	/// Exit a parse tree produced by the <c>groupField</c>
+	/// labeled alternative in <see cref="NqlParser.groupingClause"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void ExitGroupField([NotNull] NqlParser.GroupFieldContext context) { }
+	/// <summary>
+	/// Enter a parse tree produced by <see cref="NqlParser.groupingField"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void EnterGroupingField([NotNull] NqlParser.GroupingFieldContext context) { }
+	/// <summary>
+	/// Exit a parse tree produced by <see cref="NqlParser.groupingField"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void ExitGroupingField([NotNull] NqlParser.GroupingFieldContext context) { }
 	/// <summary>
 	/// Enter a parse tree produced by <see cref="NqlParser.whereClause"/>.
 	/// <para>The default implementation does nothing.</para>

@@ -29,14 +29,30 @@ namespace YacqlEngine {
             return handler.ExecuteQuery(fields, filters);
         }
 
+
         public override object VisitGameQuery([NotNull] NqlParser.GameQueryContext context) {
 
             var fields = FieldSelectionExtractor.ExtractFields(context.fieldSelection());
             var filters = FilterConditionExtractor.ExtractConditions(context.whereClause());
+            var groups = new List<QueryGrouping>();
+
+            foreach (var groupCtx in context.children.OfType<NqlParser.GroupingClauseContext>()) {
+
+                if(groupCtx is NqlParser.GroupFieldContext field) {
+                    var group = field.GetChild(0).GetText();
+                    var fieldName = field.GetChild(1).GetText();
+
+                    groups.Add(new QueryGrouping() {
+                        FiledName = fieldName,
+                        GroupType = group
+                    });
+                }
+                
+            }
 
             using var handler = new GameQueryHandler();
 
-            return handler.ExecuteQuery(fields, filters);
+            return handler.ExecuteQuery(fields, filters, groups);
         }
 
         //    public override object VisitPlayerQuery(NqlParser.PlayerQueryContext context) {

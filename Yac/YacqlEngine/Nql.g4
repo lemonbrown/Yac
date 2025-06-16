@@ -7,29 +7,29 @@ query        : playerQuery
              ;
 
 playerQuery  : 'player:' NAME 'stats' whereClause? ;
-teamQuery    : ('team:' NAME | 'teams') fieldSelection? whereClause? ;
-gameQuery    : 'games' fieldSelection? whereClause? ;
-seasonQuery  : 'seasons' fieldSelection? whereClause? ;
+teamQuery    : ('team:' NAME | 'teams') fieldSelection? groupingClause? whereClause? ;
+gameQuery    : 'games' fieldSelection? groupingClause? whereClause? ;
+seasonQuery  : 'seasons' fieldSelection? groupingClause? whereClause? ;
 
-playerList  : NAME (',' NAME)* ;
-teamList    : NAME (',' NAME)* ;
-gameList    : NAME (',' NAME)* ;
-
+// --- field selection for columns ---
 fieldSelection : field ((',' | WS) field)* ;
 field
-    : ('total' | 'avg' | 'most' | 'least' | 'count' ) NAME?  # aggregateField
-    | NAME                  # nameField
+    : ('total' | 'avg' | 'most' | 'least' | 'count') NAME?  # aggregateField
+    | NAME                                                  # nameField
     ;
 
+// --- new group-by clause ---
+groupingClause : 'by' groupingField ((',' | WS) groupingField)* # groupField ;
+groupingField  : NAME ; 
 
+// --- filters ---
 whereClause  : 'where' condition ( 'and' condition )* ;
 condition    : NAME operator value ;
 operator     : '=' | '>' | '<' | '>=' | '<=' ;
 value        : NAME | NUMBER | STRING ;
 
+// --- tokens ---
 NAME         : [a-zA-Z0-9_]+ ;
 NUMBER       : [0-9]+ ;
 STRING       : '\'' (~['\r\n])* '\'' ;
 WS           : [ \t\r\n]+ -> skip ;
-
-

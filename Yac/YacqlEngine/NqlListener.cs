@@ -81,36 +81,6 @@ public interface INqlListener : IParseTreeListener {
 	/// <param name="context">The parse tree.</param>
 	void ExitSeasonQuery([NotNull] NqlParser.SeasonQueryContext context);
 	/// <summary>
-	/// Enter a parse tree produced by <see cref="NqlParser.playerList"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	void EnterPlayerList([NotNull] NqlParser.PlayerListContext context);
-	/// <summary>
-	/// Exit a parse tree produced by <see cref="NqlParser.playerList"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	void ExitPlayerList([NotNull] NqlParser.PlayerListContext context);
-	/// <summary>
-	/// Enter a parse tree produced by <see cref="NqlParser.teamList"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	void EnterTeamList([NotNull] NqlParser.TeamListContext context);
-	/// <summary>
-	/// Exit a parse tree produced by <see cref="NqlParser.teamList"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	void ExitTeamList([NotNull] NqlParser.TeamListContext context);
-	/// <summary>
-	/// Enter a parse tree produced by <see cref="NqlParser.gameList"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	void EnterGameList([NotNull] NqlParser.GameListContext context);
-	/// <summary>
-	/// Exit a parse tree produced by <see cref="NqlParser.gameList"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	void ExitGameList([NotNull] NqlParser.GameListContext context);
-	/// <summary>
 	/// Enter a parse tree produced by <see cref="NqlParser.fieldSelection"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
@@ -144,6 +114,28 @@ public interface INqlListener : IParseTreeListener {
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	void ExitNameField([NotNull] NqlParser.NameFieldContext context);
+	/// <summary>
+	/// Enter a parse tree produced by the <c>groupField</c>
+	/// labeled alternative in <see cref="NqlParser.groupingClause"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void EnterGroupField([NotNull] NqlParser.GroupFieldContext context);
+	/// <summary>
+	/// Exit a parse tree produced by the <c>groupField</c>
+	/// labeled alternative in <see cref="NqlParser.groupingClause"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void ExitGroupField([NotNull] NqlParser.GroupFieldContext context);
+	/// <summary>
+	/// Enter a parse tree produced by <see cref="NqlParser.groupingField"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void EnterGroupingField([NotNull] NqlParser.GroupingFieldContext context);
+	/// <summary>
+	/// Exit a parse tree produced by <see cref="NqlParser.groupingField"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void ExitGroupingField([NotNull] NqlParser.GroupingFieldContext context);
 	/// <summary>
 	/// Enter a parse tree produced by <see cref="NqlParser.whereClause"/>.
 	/// </summary>

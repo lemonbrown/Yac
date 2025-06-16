@@ -1,4 +1,6 @@
-﻿using YacData.Models;
+﻿using System.ComponentModel.DataAnnotations;
+using System.Reflection;
+using YacData.Models;
 using YacqlEngine.Helpers;
 using YacqlEngine.Queries.Common;
 
@@ -7,6 +9,15 @@ namespace YacqlEngine.Queries {
 
 
     public class GameQueryHandler : BaseQueryHandler<Dictionary<string, object>> {
+
+        private static (string ObjectName, string PropertyName)? ResolveField(string field) {
+
+            return
+                ResolveDefenseStatField(field)
+                ?? ResolvePassingStatField(field)
+                ?? ResolveGameField(field);
+        }
+
 
         protected override IEnumerable<Dictionary<string, object>> GetFilteredData(List<FilterCondition> filters) {
 
@@ -25,7 +36,7 @@ namespace YacqlEngine.Queries {
                         _ => ("", "")
                     };
 
-                    var resolvedStatKey = ResolvePassingStatField(filter.Field);
+                    var resolvedStatKey = ResolveField(filter.Field);
 
                     var fieldValues = flat.Keys.Select(n => n.ToString()).Where(n => n.Contains(resolvedStatKey.Value.ObjectName) && n.EndsWith("." + resolvedStatKey.Value.PropertyName));
 
@@ -47,9 +58,30 @@ namespace YacqlEngine.Queries {
 
         }
 
+        protected override double GetNumericValue(Dictionary<string, object> item, string fieldName) {
+
+            var resolvedStatKey = ResolveField(fieldName);
+
+            var fieldValues = item.Keys.Select(n => n.ToString()).Where(n => n.Contains(resolvedStatKey.Value.ObjectName) && n.EndsWith("." + resolvedStatKey.Value.PropertyName));
+
+            if (!fieldValues.Any())
+                return 0.0;
+
+
+            var total = 0.0;
+
+            foreach (var value in fieldValues) {
+
+                total += Convert.ToDouble(item[value]);
+            }
+
+            return total;
+        }
+
+
         private static bool Compare(decimal left, decimal right, string op) =>
            op switch {
-               "==" => left == right,
+               "=" => left == right,
                "!=" => left != right,
                ">" => left > right,
                "<" => left < right,
@@ -72,7 +104,7 @@ namespace YacqlEngine.Queries {
 
                 if (String.IsNullOrEmpty(fieldName)) { 
 
-                    var resolvedStatKey = ResolvePassingStatField(field.Field);
+                    var resolvedStatKey = ResolveField(field.Field);
 
                     var fieldValues = item.Keys.Select(n => n.ToString()).Where(n => n.Contains(resolvedStatKey.Value.ObjectName) && n.EndsWith("." + resolvedStatKey.Value.PropertyName));
 
@@ -113,8 +145,25 @@ namespace YacqlEngine.Queries {
             return projected;
 
         }
-        protected override string GetGroupingKey(Dictionary<string, object> item) => throw new NotImplementedException();
-        protected override object? GetFieldValue(Dictionary<string, object> item, string fieldName) => throw new NotImplementedException();
+        protected override string GetGroupingKey(Dictionary<string, object> item) {
+
+            string key = item["Game.Id"].ToString();
+
+            return key;
+
+        }
+        protected override object? GetFieldValue(Dictionary<string, object> item, string fieldName) {
+
+
+            var resolvedStatKey = ResolveField(fieldName);
+
+            var fieldValues = item.Keys.Select(n => n.ToString()).Where(n => n.Contains(resolvedStatKey.Value.ObjectName) && n.EndsWith("." + resolvedStatKey.Value.PropertyName));
+
+            var fieldValue = item[fieldValues.FirstOrDefault()];
+
+            return fieldValue;
+
+        }
 
         //private IEnumerable<(string TeamName, TeamSeason Season)> FilterGames(
         //    List<GameRecord> gameRecords,
@@ -225,6 +274,109 @@ namespace YacqlEngine.Queries {
             return map.TryGetValue(normalized, out var result) ? (result.ObjectName, result.PropertyName) : null;
         }
 
+
+        public static (string ObjectName, string PropertyName)? ResolveDefenseStatField(string field) {
+            var normalized = field.ToLowerInvariant();
+
+            var map = new Dictionary<string, (string PropertyName, string ObjectName)> {
+                // Coverage Stats
+                ["interceptions"] = ("Interceptions", "DefenseStats"),
+                ["int"] = ("Interceptions", "DefenseStats"),
+
+                ["targets"] = ("Targets", "DefenseStats"),
+                ["tgt"] = ("Targets", "DefenseStats"),
+
+                ["completions_allowed"] = ("CompletionsAllowed", "DefenseStats"),
+                ["cmp"] = ("CompletionsAllowed", "DefenseStats"),
+
+                ["completion_percentage_allowed"] = ("CompletionPercentageAllowed", "DefenseStats"),
+                ["cmp%"] = ("CompletionPercentageAllowed", "DefenseStats"),
+
+                ["yards_allowed"] = ("YardsAllowed", "DefenseStats"),
+                ["yds"] = ("YardsAllowed", "DefenseStats"),
+
+                ["yards_per_completion_allowed"] = ("YardsPerCompletionAllowed", "DefenseStats"),
+                ["yds/cmp"] = ("YardsPerCompletionAllowed", "DefenseStats"),
+
+                ["yards_per_target_allowed"] = ("YardsPerTargetAllowed", "DefenseStats"),
+                ["yds/tgt"] = ("YardsPerTargetAllowed", "DefenseStats"),
+
+                ["touchdowns_allowed"] = ("TouchdownsAllowed", "DefenseStats"),
+                ["td"] = ("TouchdownsAllowed", "DefenseStats"),
+
+                ["passer_rating_allowed"] = ("PasserRatingAllowed", "DefenseStats"),
+                ["rat"] = ("PasserRatingAllowed", "DefenseStats"),
+
+                ["dadot"] = ("DADOT", "DefenseStats"),  // Depth of Average Depth of Target
+
+                ["air_yards_allowed"] = ("AirYardsAllowed", "DefenseStats"),
+                ["air"] = ("AirYardsAllowed", "DefenseStats"),
+
+                ["yards_after_catch_allowed"] = ("YardsAfterCatchAllowed", "DefenseStats"),
+                ["yac"] = ("YardsAfterCatchAllowed", "DefenseStats"),
+
+                // Pressure Stats
+                ["blitzes"] = ("Blitzes", "DefenseStats"),
+                ["bltz"] = ("Blitzes", "DefenseStats"),
+
+                ["hurries"] = ("Hurries", "DefenseStats"),
+                ["hrry"] = ("Hurries", "DefenseStats"),
+
+                ["qb_knockdowns"] = ("QBKnockdowns", "DefenseStats"),
+                ["qbkds"] = ("QBKnockdowns", "DefenseStats"),
+                ["qbkd"] = ("QBKnockdowns", "DefenseStats"),
+
+                ["sacks"] = ("Sacks", "DefenseStats"),
+                ["sk"] = ("Sacks", "DefenseStats"),
+
+                ["pressures"] = ("Pressures", "DefenseStats"),
+                ["prss"] = ("Pressures", "DefenseStats"),
+
+                // Tackling Stats
+                ["combined_tackles"] = ("CombinedTackles", "DefenseStats"),
+                ["comb"] = ("CombinedTackles", "DefenseStats"),
+
+                ["missed_tackles"] = ("MissedTackles", "DefenseStats"),
+                ["mtkl"] = ("MissedTackles", "DefenseStats"),
+
+                ["missed_tackle_rate"] = ("MissedTackleRate", "DefenseStats"),
+                ["mtkl%"] = ("MissedTackleRate", "DefenseStats")
+            };
+
+            return map.TryGetValue(normalized, out var result) ? (result.ObjectName, result.PropertyName) : null;
+        }
+
+
+        public static (string ObjectName, string PropertyName)? ResolveGameField(string field) {
+            var normalized = field.ToLowerInvariant();
+
+            var map = new Dictionary<string, (string PropertyName, string ObjectName)> {
+                ["week"] = ("Week", "Game"),
+                ["year"] = ("Year", "Game"),
+                ["date"] = ("DateTime", "Game"),
+                ["datetime"] = ("DateTime", "Game"),
+                ["game_date"] = ("DateTime", "Game"),
+
+                // Team Names
+                ["home_team"] = ("HomeTeamName", "Game"),
+                ["home_team_name"] = ("HomeTeamName", "Game"),
+                ["away_team"] = ("AwayTeamName", "Game"),
+                ["away_team_name"] = ("AwayTeamName", "Game"),
+
+                // Team IDs
+                ["home_team_id"] = ("HomeTeamId", "Game"),
+                ["away_team_id"] = ("AwayTeamId", "Game"),
+
+                // Scores
+                ["home_score"] = ("HomeTeamScore", "Game"),
+                ["home_team_score"] = ("HomeTeamScore", "Game"),
+
+                ["away_score"] = ("AwayTeamScore", "Game"),
+                ["away_team_score"] = ("AwayTeamScore", "Game")
+            };
+
+            return map.TryGetValue(normalized, out var result) ? (result.ObjectName, result.PropertyName) : null;
+        }
 
     }
 }

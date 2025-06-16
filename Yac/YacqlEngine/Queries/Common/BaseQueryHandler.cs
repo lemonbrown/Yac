@@ -1,11 +1,13 @@
 ﻿using LiteDB;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using YacData.Models;
+using YacqlEngine.Helpers;
 
 namespace YacqlEngine.Queries.Common {
     public abstract class BaseQueryHandler<T> : IDisposable{
@@ -21,19 +23,19 @@ namespace YacqlEngine.Queries.Common {
         protected abstract Dictionary<string, object?> ProjectItem(T item, List<FieldSelection> regularFields);
         protected abstract string GetGroupingKey(T item);
 
-        public List<Dictionary<string, object?>> ExecuteQuery(List<FieldSelection> fields, List<FilterCondition> filters) {
+        public List<Dictionary<string, object?>> ExecuteQuery(List<FieldSelection> fields, List<FilterCondition> filters, List<QueryGrouping>? queryGroupings = null) {
+
             var filteredData = GetFilteredData(filters);
 
             var regularFields = fields.Where(f => f.Aggregation == null).ToList();
             var aggregatedFields = fields.Where(f => f.Aggregation != null).ToList();
 
             if (aggregatedFields.Any()) {
-                return ExecuteAggregatedQuery(filteredData, regularFields, aggregatedFields);
+                return ExecuteAggregatedQuery(filteredData, regularFields, aggregatedFields, queryGroupings);
             } else {
                 return ExecuteSimpleQuery(filteredData, regularFields);
             }
         }
-
         private List<Dictionary<string, object?>> ExecuteSimpleQuery(IEnumerable<T> data, List<FieldSelection> regularFields) {
             return data.Select(item => ProjectItem(item, regularFields)).ToList();
         }
@@ -41,10 +43,53 @@ namespace YacqlEngine.Queries.Common {
         private List<Dictionary<string, object?>> ExecuteAggregatedQuery(
             IEnumerable<T> data,
             List<FieldSelection> regularFields,
-            List<FieldSelection> aggregatedFields) {
+            List<FieldSelection> aggregatedFields,
+            List<QueryGrouping>? queryGroupings) {
+
             var grouped = data.GroupBy(GetGroupingKey);
 
+            List<IGrouping<string, T>> grouppy = new List<IGrouping<string, T>>();
+
+            foreach(var grouping in queryGroupings) {
+
+                if(grouping.GroupType == "by") {
+
+                    if(grouping.FiledName == "team") {
+                        var test = data as List<Dictionary<string, object?>>;
+                        var test2 = test.Select(n => n["Game.HomeTeamName"]);
+
+                        var group1 = data.GroupBy(n => (n as Dictionary<string, object?>)["Game.HomeTeamName"].ToString());
+
+                        foreach(var a in group1) {
+
+                            foreach(var b in a) {
+
+                                var gameitems = new Dictionary<string, object?>();
+
+                                var keypairs = b as Dictionary<string, object>;
+
+                                foreach(var keypair in keypairs) {
+
+                                    if (keypair.Key.Contains(NFLTeamConverter.GetTeamAbbreviation(a.Key))) {
+
+                                        if (!gameitems.ContainsKey(keypair.Key)) {
+                                            {
+                                                gameitems.Add(keypair.Key, keypair.Value);
+                                            }
+                                        }
+
+                                    }
+
+                                }
+                            }
+                        }
+                    }
+                }
+
+            }
+
             return grouped.Select(group => {
+
                 var result = new Dictionary<string, object?>();
 
                 // Add grouping key
