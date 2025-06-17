@@ -9,13 +9,16 @@ using System.Threading.Tasks;
 using YacData.Models;
 using YacqlEngine.Helpers;
 
-namespace YacqlEngine.Queries.Common {
-    public abstract class BaseQueryHandler<T> : IDisposable{
+namespace YacqlEngine.Queries.Common
+{
+    public abstract class BaseQueryHandler<T> : IDisposable
+    {
 
         protected readonly LiteDatabase _db;
         protected readonly string _dbPath = "C:\\Users\\cameron\\source\\repos\\Yac\\Yac\\DataScraper\\bin\\Debug\\net8.0\\yac.db";
 
-        protected BaseQueryHandler() {
+        protected BaseQueryHandler()
+        {
             _db = new LiteDatabase(_dbPath);
         }
 
@@ -23,20 +26,25 @@ namespace YacqlEngine.Queries.Common {
         protected abstract Dictionary<string, object?> ProjectItem(T item, List<FieldSelection> regularFields);
         protected abstract string GetGroupingKey(T item);
 
-        public List<Dictionary<string, object?>> ExecuteQuery(List<FieldSelection> fields, List<FilterCondition> filters, List<QueryGrouping>? queryGroupings = null) {
+        public List<Dictionary<string, object?>> ExecuteQuery(List<FieldSelection> fields, List<FilterCondition> filters, List<QueryGrouping>? queryGroupings = null)
+        {
 
             var filteredData = GetFilteredData(filters);
 
             var regularFields = fields.Where(f => f.Aggregation == null).ToList();
             var aggregatedFields = fields.Where(f => f.Aggregation != null).ToList();
 
-            if (aggregatedFields.Any()) {
+            if (aggregatedFields.Any())
+            {
                 return ExecuteAggregatedQuery(filteredData, regularFields, aggregatedFields, queryGroupings);
-            } else {
+            }
+            else
+            {
                 return ExecuteSimpleQuery(filteredData, regularFields);
             }
         }
-        private List<Dictionary<string, object?>> ExecuteSimpleQuery(IEnumerable<T> data, List<FieldSelection> regularFields) {
+        private List<Dictionary<string, object?>> ExecuteSimpleQuery(IEnumerable<T> data, List<FieldSelection> regularFields)
+        {
             return data.Select(item => ProjectItem(item, regularFields)).ToList();
         }
 
@@ -44,38 +52,47 @@ namespace YacqlEngine.Queries.Common {
             IEnumerable<T> data,
             List<FieldSelection> regularFields,
             List<FieldSelection> aggregatedFields,
-            List<QueryGrouping>? queryGroupings) {
+            List<QueryGrouping>? queryGroupings)
+        {
 
             var grouped = data.GroupBy(GetGroupingKey);
 
             List<IGrouping<string, T>> grouppy = new List<IGrouping<string, T>>();
 
-            foreach(var grouping in queryGroupings) {
+            foreach (var grouping in queryGroupings)
+            {
 
-                if(grouping.GroupType == "by") {
+                if (grouping.GroupType == "by")
+                {
 
-                    if(grouping.FiledName == "team") {
+                    if (grouping.FiledName == "team")
+                    {
                         var test = data as List<Dictionary<string, object?>>;
                         var test2 = test.Select(n => n["Game.HomeTeamName"]);
 
                         var group1 = data.GroupBy(n => (n as Dictionary<string, object?>)["Game.HomeTeamName"].ToString());
 
-                        foreach(var a in group1) {
+                        foreach (var a in group1)
+                        {
 
-                            foreach(var b in a) {
+                            foreach (var b in a)
+                            {
 
                                 var gameitems = new Dictionary<string, object?>();
 
                                 var keypairs = b as Dictionary<string, object>;
 
-                                foreach(var keypair in keypairs) {
+                                foreach (var keypair in keypairs)
+                                {
 
-                                    if (keypair.Key.Contains(NFLTeamConverter.GetTeamAbbreviation(a.Key))) {
+                                    if (keypair.Key.Contains(NFLTeamConverter.GetTeamAbbreviation(a.Key)))
+                                    {
 
-                                        if (!gameitems.ContainsKey(keypair.Key)) {
-                                            {
-                                                gameitems.Add(keypair.Key, keypair.Value);
-                                            }
+                                        if (!gameitems.ContainsKey(keypair.Key))
+                                        {
+
+                                            gameitems.Add(keypair.Key, keypair.Value);
+
                                         }
 
                                     }
@@ -88,7 +105,8 @@ namespace YacqlEngine.Queries.Common {
 
             }
 
-            return grouped.Select(group => {
+            return grouped.Select(group =>
+            {
 
                 var result = new Dictionary<string, object?>();
 
@@ -96,27 +114,32 @@ namespace YacqlEngine.Queries.Common {
                 AddGroupingInfo(result, group.Key);
 
                 // Add regular fields (from first item)
-                if (group.Any()) {
+                if (group.Any())
+                {
                     var firstItem = group.First();
                     var regularProjection = ProjectItem(firstItem, regularFields);
-                    foreach (var kvp in regularProjection.Where(x => x.Key != GetGroupingFieldName())) {
+                    foreach (var kvp in regularProjection.Where(x => x.Key != GetGroupingFieldName()))
+                    {
                         result[kvp.Key] = kvp.Value;
                     }
                 }
 
                 // Add aggregated fields
-                foreach (var field in aggregatedFields) {
+                foreach (var field in aggregatedFields)
+                {
                     var aggregatedValue = CalculateAggregation(group, field);
                     result[$"{field.Aggregation}_{field.Field}"] = aggregatedValue;
 
                     // For "most" and "least" aggregations, also include associated fields from the same record
-                    if (field.Aggregation?.ToLower() == "most" || field.Aggregation?.ToLower() == "least") {
+                    if (field.Aggregation?.ToLower() == "most" || field.Aggregation?.ToLower() == "least")
+                    {
                         var targetItem = field.Aggregation.ToLower() == "most"
                             ? GetItemWithMax(group, field.Field)
                             : GetItemWithMin(group, field.Field);
 
                         // Add all regular fields from the record that had the max/min value
-                        foreach (var regularField in regularFields) {
+                        foreach (var regularField in regularFields)
+                        {
                             var fieldValue = GetFieldValue(targetItem, regularField.Field);
                             result[regularField.Field] = fieldValue;
                         }
@@ -124,10 +147,13 @@ namespace YacqlEngine.Queries.Common {
                 }
 
                 // If no "most"/"least" aggregations, add regular fields from first item (existing behavior)
-                if (!aggregatedFields.Any(f => f.Aggregation?.ToLower() == "most" || f.Aggregation?.ToLower() == "least")) {
-                    if (group.Any()) {
+                if (!aggregatedFields.Any(f => f.Aggregation?.ToLower() == "most" || f.Aggregation?.ToLower() == "least"))
+                {
+                    if (group.Any())
+                    {
                         var firstItem = group.First();
-                        foreach (var field in regularFields) {
+                        foreach (var field in regularFields)
+                        {
                             result[field.Field] = GetFieldValue(firstItem, field.Field);
                         }
                     }
@@ -139,14 +165,17 @@ namespace YacqlEngine.Queries.Common {
         protected abstract object? GetFieldValue(T item, string fieldName);
 
 
-        protected virtual void AddGroupingInfo(Dictionary<string, object?> result, string groupKey) {
+        protected virtual void AddGroupingInfo(Dictionary<string, object?> result, string groupKey)
+        {
             result[GetGroupingFieldName()] = groupKey;
         }
 
         protected virtual string GetGroupingFieldName() => "group";
 
-        private object? CalculateAggregation(IGrouping<string, T> group, FieldSelection field) {
-            return field.Aggregation?.ToLower() switch {
+        private object? CalculateAggregation(IGrouping<string, T> group, FieldSelection field)
+        {
+            return field.Aggregation?.ToLower() switch
+            {
                 "total" => CalculateSum(group, field.Field),
                 "avg" => CalculateAverage(group, field.Field),
                 "most" => GetNumericValue(GetItemWithMax(group, field.Field), field.Field), // Get the max value
@@ -156,41 +185,49 @@ namespace YacqlEngine.Queries.Common {
             };
         }
 
-        protected double CalculateSum(IGrouping<string, T> group, string fieldName) {
+        protected double CalculateSum(IGrouping<string, T> group, string fieldName)
+        {
             return group.Select(item => GetNumericValue(item, fieldName)).Sum();
         }
 
-        protected double CalculateAverage(IGrouping<string, T> group, string fieldName) {
+        protected double CalculateAverage(IGrouping<string, T> group, string fieldName)
+        {
             var values = group.Select(item => GetNumericValue(item, fieldName)).ToList();
             return values.Any() ? Math.Round(values.Average(), 2) : 0.0;
         }
 
-        protected double CalculateMax(IGrouping<string, T> group, string fieldName) {
+        protected double CalculateMax(IGrouping<string, T> group, string fieldName)
+        {
             return group.Select(item => GetNumericValue(item, fieldName)).DefaultIfEmpty(0.0).Max();
         }
 
-        protected double CalculateMin(IGrouping<string, T> group, string fieldName) {
+        protected double CalculateMin(IGrouping<string, T> group, string fieldName)
+        {
             return group.Select(item => GetNumericValue(item, fieldName)).DefaultIfEmpty(0.0).Min();
         }
 
-        protected T GetItemWithMax(IGrouping<string, T> group, string fieldName) {
+        protected T GetItemWithMax(IGrouping<string, T> group, string fieldName)
+        {
             return group.OrderByDescending(item => GetNumericValue(item, fieldName)).First();
         }
 
         // New method to get the item with minimum value for a field
-        protected T GetItemWithMin(IGrouping<string, T> group, string fieldName) {
+        protected T GetItemWithMin(IGrouping<string, T> group, string fieldName)
+        {
             return group.OrderBy(item => GetNumericValue(item, fieldName)).First();
         }
 
 
         // Make this virtual so derived classes can override it
-        protected virtual double GetNumericValue(T item, string fieldName) {
+        protected virtual double GetNumericValue(T item, string fieldName)
+        {
             var prop = typeof(T).GetProperty(fieldName, BindingFlags.IgnoreCase | BindingFlags.Public | BindingFlags.Instance);
             if (prop == null)
                 return 0.0;
 
             var val = prop.GetValue(item);
-            return val switch {
+            return val switch
+            {
                 int i => (double)i,
                 double d => d,
                 float f => (double)f,
@@ -201,7 +238,8 @@ namespace YacqlEngine.Queries.Common {
             };
         }
 
-        public void Dispose() {
+        public void Dispose()
+        {
             _db?.Dispose();
         }
 
